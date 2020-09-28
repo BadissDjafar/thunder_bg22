@@ -74,7 +74,7 @@ static gecko_configuration_t config = {
 #if defined(FEATURE_LFXO) || defined(PLFRCO_PRESENT) || defined(LFRCO_PRESENT)
   .sleep.flags = SLEEP_FLAGS_DEEP_SLEEP_ENABLE,        /* Sleep is enabled */
 #else
-  .sleep.flags = 0,
+  .sleep.flags = SLEEP_FLAGS_DEEP_SLEEP_ENABLE,
 #endif
   .bluetooth.max_connections = MAX_CONNECTIONS,        /* Maximum number of simultaneous connections */
   .bluetooth.max_advertisers = MAX_ADVERTISERS,        /* Maximum number of advertisement sets */
@@ -112,11 +112,6 @@ int main(void)
   /* Initialize application */
   initApp();
   initVcomEnable();
-
-  /* LED test */
-  CMU_ClockEnable(cmuClock_GPIO,true);
-  GPIO_PinModeSet(gpioPortB,0,gpioModePushPull,0);
-  GPIO_PinOutSet(gpioPortB,0);
 
   /* Start application */
   appMain(&config);

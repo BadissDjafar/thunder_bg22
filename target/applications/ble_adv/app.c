@@ -42,6 +42,10 @@ void appMain(gecko_configuration_t *pconfig)
   /* Initialize debug prints. Note: debug prints are off by default. See DEBUG_LEVEL in app.h */
   initLog();
 
+  /* Debug */
+  CMU_ClockEnable(cmuClock_GPIO,true);
+  CMU_ClkOutPinConfig(0,cmuSelect_HFXO,1,gpioPortC,2);
+
   /* Initialize stack */
   gecko_init(pconfig);
 
