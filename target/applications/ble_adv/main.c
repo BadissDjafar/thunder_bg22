@@ -18,6 +18,8 @@
  * sections of the MSLA applicable to Source Code.
  *
  ******************************************************************************/
+/* standard stio */
+#include <stdio.h>
 
 /* Board headers */
 #include "init_mcu.h"
@@ -31,11 +33,6 @@
 #include "native_gecko.h"
 #include "gatt_db.h"
 
-/* Libraries containing default Gecko configuration values */
-#include "em_emu.h"
-#include "em_cmu.h"
-#include "em_gpio.h"
-
 /* Device initialization header */
 #include "hal-config.h"
 
@@ -44,6 +41,9 @@
 #else
 #include "bspconfig.h"
 #endif
+
+/* printf */
+#include "retargetserial.h"
 
 /* Application header */
 #include "app.h"
@@ -111,12 +111,9 @@ int main(void)
   initBoard();
   /* Initialize application */
   initApp();
-  initVcomEnable();
 
-  /* LED test */
-  CMU_ClockEnable(cmuClock_GPIO,true);
-  GPIO_PinModeSet(gpioPortB,0,gpioModePushPull,0);
-  GPIO_PinOutSet(gpioPortB,0);
+  /* Enable output */
+  RETARGET_SerialInit();
 
   /* Start application */
   appMain(&config);

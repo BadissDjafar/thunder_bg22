@@ -1,7 +1,7 @@
 ################################################################################
 #                   recursive application build target def                     #
 ################################################################################
-DIRS = led accelerometer board_id#ble_adv
+DIRS = led ble_adv accelerometer
 
 ################################################################################
 #                             BUILD TARGETS                                    #
@@ -9,14 +9,11 @@ DIRS = led accelerometer board_id#ble_adv
 led_app :
 	$(MAKE) -C led all
 
+ble_adv_app :
+	$(MAKE) -C ble_adv all
+
 accelerometer_app :
 	$(MAKE) -C accelerometer all
-
-board_id_app :
-	$(MAKE) -C board_id all
-
-#ble_adv_app :
-#	$(MAKE) -C ble_adv all
 
 ################################################################################
 #                             CLEAN TARGETS                                    #
