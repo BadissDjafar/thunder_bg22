@@ -1,0 +1,11 @@
+PKG_NAME_SHORT="LC3_ETSI"
+PKG_NAME_LONG="Low Complexity Communication Codec"
+PKG_SUPPORT_EMAIL="nbc-techsupport@iis.fraunhofer.de"
+PKG_TYPE="src"
+PKG_PLATFORM=""
+PKG_TOOLCHAIN=""
+PKG_TOOLCHAIN_VERSION=""
+PKG_VERSION="11482"
+PKG_AOTS=""
+PKG_EVALTAG="0"
+
