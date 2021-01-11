@@ -18,11 +18,18 @@
  * sections of the MSLA applicable to Source Code.
  *
  ******************************************************************************/
+/* standard stio */
+#include <stdio.h>
 
 /* Bluetooth stack headers */
 #include "bg_types.h"
 #include "native_gecko.h"
 #include "gatt_db.h"
+
+/* Libraries containing default Gecko configuration values */
+#include "em_emu.h"
+#include "em_cmu.h"
+#include "em_gpio.h"
 
 #include "app.h"
 
@@ -41,6 +48,10 @@ void appMain(gecko_configuration_t *pconfig)
 
   /* Initialize debug prints. Note: debug prints are off by default. See DEBUG_LEVEL in app.h */
   initLog();
+
+  /* Debug */
+  CMU_ClockEnable(cmuClock_GPIO,true);
+  CMU_ClkOutPinConfig(0,cmuSelect_HFXO,1,gpioPortC,2);
 
   /* Initialize stack */
   gecko_init(pconfig);
@@ -83,6 +94,14 @@ void appMain(gecko_configuration_t *pconfig)
 
         printLog("connection opened\r\n");
 
+        break;
+
+      case gecko_evt_le_connection_parameters_id:
+
+        printf("connection time settings:\r\n");
+        printf("interval %d ms ",(uint16_t)((float)evt->data.evt_le_connection_parameters.interval*(float)1.25));
+        printf("latency %d intervals ",evt->data.evt_le_connection_parameters.latency);
+        printf("timeout %d ms\r\n",(evt->data.evt_le_connection_parameters.timeout)*10);
         break;
 
       case gecko_evt_le_connection_closed_id:

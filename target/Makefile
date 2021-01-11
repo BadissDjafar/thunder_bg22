@@ -14,7 +14,7 @@ export OBJCPY = $(CROSS_OBJCPY)
 export DUMP = $(CROSS_OBJDUMP)
 
 # include/lib path
-export IPATH = -I$(PRJROOT)/include -I$(PRJROOT)/include/CMSIS/include -I$(PRJROOT)/config -I$(PRJROOT)/drivers/emlib -I$(PRJROOT)/drivers/bsp -I$(PRJROOT)/common -I$(PRJROOT)/device -I$(PRJROOT)/RF/radio -I$(PRJROOT)/RF/bluetooth
+export IPATH = -I$(PRJROOT)/include -I$(PRJROOT)/include/CMSIS/include -I$(PRJROOT)/config -I$(PRJROOT)/drivers/emlib -I$(PRJROOT)/drivers/emdrv/gpiointerrupt -I$(PRJROOT)/drivers/bsp -I$(PRJROOT)/common  -I$(PRJROOT)/device -I$(PRJROOT)/RF/radio -I$(PRJROOT)/RF/bluetooth
 export LPATH = -L$(PRJROOT)/RF/bluetooth -L$(PRJROOT)/RF/radio -L$(PRJROOT)/drivers/emdrv/nvm3
 
 # compilation/linking flag
@@ -32,12 +32,42 @@ CLEAN_DIRS = common device drivers applications
 ################################################################################
 default : usage
 
-all : led
+all : led ble_adv
 
 led : led_compile
 	@echo -e "\033[1;35m[Linking $@]\033[0m"
 	#$(LD) $(LDFLAGS) $(LPATH) -Map="soc-empty.map" -lnvm3_CM33_gcc -lrail_efr32xg22_gcc_release -lbluetooth -lmbedtls $(PRJROOT)/RF/bluetooth/binapploader.o *.o -o $@.elf
 	$(CC) $(LDFLAGS) $(LPATH) *.o -lbluetooth -lrail_efr32xg22_gcc_release -lmbedtls $(PRJROOT)/RF/bluetooth/binapploader.o -lnvm3_CM33_gcc -o $@.elf -lgcc -lc -lnosys
+
+	@echo -e "\033[1;35m[OBJCPY ->> HEX & SREC images $@]\033[0m"
+	$(OBJCPY) -O ihex $@.elf $@.hex
+	$(OBJCPY) -O srec $@.elf $@.srec
+	@echo -e  "\033[1;32m[Finished $@]\033[0m"
+
+ble_adv : ble_adv_compile
+	@echo -e "\033[1;35m[Linking $@]\033[0m"
+	#$(LD) $(LDFLAGS) $(LPATH) -Map="soc-empty.map" -lnvm3_CM33_gcc -lrail_efr32xg22_gcc_release -lbluetooth -lmbedtls $(PRJROOT)/RF/bluetooth/binapploader.o *.o -o $@.elf
+	$(CC) $(LDFLAGS) $(LPATH) *.o -lbluetooth -lrail_efr32xg22_gcc_release -lmbedtls $(PRJROOT)/RF/bluetooth/binapploader.o -lnvm3_CM33_gcc -o $@.elf -lgcc -lc -lnosys
+
+	@echo -e "\033[1;35m[OBJCPY ->> HEX & SREC images $@]\033[0m"
+	$(OBJCPY) -O ihex $@.elf $@.hex
+	$(OBJCPY) -O srec $@.elf $@.srec
+	@echo -e  "\033[1;32m[Finished $@]\033[0m"
+
+accelerometer : accelerometer_compile
+	@echo -e "\033[1;35m[Linking $@]\033[0m"
+	#$(LD) $(LDFLAGS) $(LPATH) -Map="soc-empty.map" -lnvm3_CM33_gcc -lrail_efr32xg22_gcc_release -lbluetooth -lmbedtls $(PRJROOT)/RF/bluetooth/binapploader.o *.o -o $@.elf
+	$(CC) $(LDFLAGS) $(LPATH) *.o -o $@.elf -lgcc -lc -lnosys
+
+	@echo -e "\033[1;35m[OBJCPY ->> HEX & SREC images $@]\033[0m"
+	$(OBJCPY) -O ihex $@.elf $@.hex
+	$(OBJCPY) -O srec $@.elf $@.srec
+	@echo -e  "\033[1;32m[Finished $@]\033[0m"
+
+board_id : board_id_compile
+	@echo -e "\033[1;35m[Linking $@]\033[0m"
+	#$(LD) $(LDFLAGS) $(LPATH) -Map="soc-empty.map" -lnvm3_CM33_gcc -lrail_efr32xg22_gcc_release -lbluetooth -lmbedtls $(PRJROOT)/RF/bluetooth/binapploader.o *.o -o $@.elf
+	$(CC) $(LDFLAGS) $(LPATH) *.o -o $@.elf -lgcc -lc -lnosys
 
 	@echo -e "\033[1;35m[OBJCPY ->> HEX & SREC images $@]\033[0m"
 	$(OBJCPY) -O ihex $@.elf $@.hex
@@ -50,6 +80,21 @@ led : led_compile
 led_compile : comn dev drv
 	@echo -e "\033[1;32m[Compiling $@]\033[0m"
 	$(MAKE) -C applications led_app
+	@echo -e  "\033[1;32m[Finished $@]\033[0m"
+
+ble_adv_compile : comn dev drv
+	@echo -e "\033[1;32m[Compiling $@]\033[0m"
+	$(MAKE) -C applications ble_adv_app
+	@echo -e  "\033[1;32m[Finished $@]\033[0m"
+
+accelerometer_compile : comn dev drv
+	@echo -e "\033[1;32m[Compiling $@]\033[0m"
+	$(MAKE) -C applications accelerometer_app
+	@echo -e  "\033[1;32m[Finished $@]\033[0m"
+
+board_id_compile : comn dev drv
+	@echo -e "\033[1;32m[Compiling $@]\033[0m"
+	$(MAKE) -C applications board_id_app
 	@echo -e  "\033[1;32m[Finished $@]\033[0m"
 
 comn :
