@@ -8,7 +8,7 @@
 ################################################################################
 export PWD = $(shell pwd)
 export MAKE = make.exe
-export PRJROOT = C:/Projects/thunder_bg22/target
+export PRJROOT = C:/Projects/silabs_bluetooth/target
 export CROSS_CC = arm-none-eabi-gcc.exe
 export CROSS_LD = arm-none-eabi-ld.exe
 export CROSS_OBJCPY = arm-none-eabi-objcopy.exe

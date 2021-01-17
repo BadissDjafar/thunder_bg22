@@ -23,13 +23,7 @@
 #include "init_mcu.h"
 #include "init_board.h"
 #include "init_app.h"
-#include "ble-configuration.h"
 #include "board_features.h"
-
-/* Bluetooth stack headers */
-#include "bg_types.h"
-#include "native_gecko.h"
-#include "gatt_db.h"
 
 /* Libraries containing default Gecko configuration values */
 #include "em_emu.h"
@@ -45,61 +39,6 @@
 #include "bspconfig.h"
 #endif
 
-/* Application header */
-#include "app.h"
-
-/***********************************************************************************************//**
- * @addtogroup Application
- * @{
- **************************************************************************************************/
-
-/***********************************************************************************************//**
- * @addtogroup app
- * @{
- **************************************************************************************************/
-
-#ifndef MAX_ADVERTISERS
-#define MAX_ADVERTISERS 1
-#endif
-
-#ifndef MAX_CONNECTIONS
-#define MAX_CONNECTIONS 4
-#endif
-
-uint8_t bluetooth_stack_heap[DEFAULT_BLUETOOTH_HEAP(MAX_CONNECTIONS)];
-
-/* Bluetooth stack configuration parameters (see "UG136: Silicon Labs Bluetooth C Application Developer's Guide" for details on each parameter) */
-static gecko_configuration_t config = {
-  .config_flags = 0,                                   /* Check flag options from UG136 */
-#if defined(FEATURE_LFXO) || defined(PLFRCO_PRESENT) || defined(LFRCO_PRESENT)
-  .sleep.flags = SLEEP_FLAGS_DEEP_SLEEP_ENABLE,        /* Sleep is enabled */
-#else
-  .sleep.flags = SLEEP_FLAGS_DEEP_SLEEP_ENABLE,
-#endif
-  .bluetooth.max_connections = MAX_CONNECTIONS,        /* Maximum number of simultaneous connections */
-  .bluetooth.max_advertisers = MAX_ADVERTISERS,        /* Maximum number of advertisement sets */
-  .bluetooth.heap = bluetooth_stack_heap,              /* Bluetooth stack memory for connection management */
-  .bluetooth.heap_size = sizeof(bluetooth_stack_heap), /* Bluetooth stack memory for connection management */
-#if defined(FEATURE_LFXO)
-  .bluetooth.sleep_clock_accuracy = 100,               /* Accuracy of the Low Frequency Crystal Oscillator in ppm. *
-                                                       * Do not modify if you are using a module                  */
-#elif defined(PLFRCO_PRESENT) || defined(LFRCO_PRESENT)
-  .bluetooth.sleep_clock_accuracy = 500,               /* In case of internal RCO the sleep clock accuracy is 500 ppm */
-#endif
-  .gattdb = &bg_gattdb_data,                           /* Pointer to GATT database */
-  .ota.flags = 0,                                      /* Check flag options from UG136 */
-  .ota.device_name_len = 3,                            /* Length of the device name in OTA DFU mode */
-  .ota.device_name_ptr = "OTA",                        /* Device name in OTA DFU mode */
-  .pa.config_enable = 1,                               /* Set this to be a valid PA config */
-#if defined(FEATURE_PA_INPUT_FROM_VBAT)
-  .pa.input = GECKO_RADIO_PA_INPUT_VBAT,               /* Configure PA input to VBAT */
-#else
-  .pa.input = GECKO_RADIO_PA_INPUT_DCDC,               /* Configure PA input to DCDC */
-#endif // defined(FEATURE_PA_INPUT_FROM_VBAT)
-  .rf.flags = GECKO_RF_CONFIG_ANTENNA,                 /* Enable antenna configuration. */
-  .rf.antenna = GECKO_RF_ANTENNA,                      /* Select antenna path! */
-};
-
 /**
  * @brief  Main function
  */
@@ -113,8 +52,12 @@ int main(void)
   initApp();
   initVcomEnable();
 
-  /* Start application */
-  appMain(&config);
+  /* LED test */
+  CMU_ClockEnable(cmuClock_GPIO,true);
+  GPIO_PinModeSet(gpioPortB,2,gpioModePushPull,0);
+  GPIO_PinOutSet(gpioPortB,2);
+
+  for(;;){};
 }
 
 /** @} (end addtogroup app) */

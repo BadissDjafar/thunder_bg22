@@ -9,4 +9,4 @@ all : $(addsuffix .o,$(OBJS))
 
 PHONY: clean
 clean:
-	rm -f *.o *.lib *.obj *.exp
+	rm -f *.o *.srec *.hex *.elf system.map

@@ -3,15 +3,17 @@
 ################################################################################
 #                               PROJECT CONFIG                                 #
 ################################################################################
-include config.mk
+include .config
 
 ################################################################################
 #                              EXPORTS TO SUBMK                                #
 ################################################################################
-export CC = $(CROSS_CC)
-export LD = $(CROSS_LD)
-export OBJCPY = $(CROSS_OBJCPY)
-export DUMP = $(CROSS_OBJDUMP)
+export CC = $(CONFIG_CROSS_CC)
+export LD = $(CONFIG_CROSS_LD)
+export OBJCPY = $(CONFIG_CROSS_OBJCPY)
+export DUMP = $(CONFIG_CROSS_OBJDUMP)
+export PRJROOT = $(CONFIG_PRJROOT)
+export MAKE = $(CONFIG_MAKE)
 
 # include/lib path
 export IPATH = -I$(PRJROOT)/include -I$(PRJROOT)/include/CMSIS/include -I$(PRJROOT)/config -I$(PRJROOT)/drivers/emlib -I$(PRJROOT)/drivers/emdrv/gpiointerrupt -I$(PRJROOT)/drivers/bsp -I$(PRJROOT)/common  -I$(PRJROOT)/device -I$(PRJROOT)/RF/radio -I$(PRJROOT)/RF/bluetooth
@@ -33,6 +35,11 @@ CLEAN_DIRS = common device drivers applications
 default : usage
 
 all : led ble_adv
+
+menuconfig : 
+	@echo -e "\033[1;35m[Menuconfig $@]\033[0m"
+	python3.exe menuconfig.py Kconfig
+	@echo -e  "\033[1;32m[Finished $@]\033[0m"
 
 led : led_compile
 	@echo -e "\033[1;35m[Linking $@]\033[0m"

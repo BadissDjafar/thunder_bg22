@@ -1,0 +1,6 @@
+# Eplorer kit board
+
+config BOARD_EFR32BGM220_EXP_KIT
+	bool "SiLabs BGM220 Explorer kit"
+	depends on SOC_SERIES_EFR32BGM220
+	select SOC_PART_NUMBER_BGM220PC22HNA
