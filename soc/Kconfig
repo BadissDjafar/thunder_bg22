@@ -1,0 +1,10 @@
+choice
+	prompt "Choose your chip"
+	default SOC_SERIES_EFR32BG22
+
+source "../soc/bgm220/Kconfig.series"
+source "../soc/efr32bg22/Kconfig.series"
+source "../soc/efr32bg21/Kconfig.series"
+
+endchoice
+
