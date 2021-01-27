@@ -2,8 +2,8 @@ choice
 	prompt "Choose your board"
 	default BOARD_EFR32BG22_SLTB010A
 
-source "../boards/bgm220_explorer_kit/Kconfig.board"
-source "../boards/thunderboard_bg22/Kconfig.board"
+source "boards/bgm220_explorer_kit/Kconfig.board"
+source "boards/thunderboard_bg22/Kconfig.board"
 
 endchoice
 

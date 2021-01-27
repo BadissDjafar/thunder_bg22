@@ -2,8 +2,8 @@ choice
   prompt "Choose your application"
   default APP_LED
 
-source "applications/led/Kconfig.app"
-source "applications/ble_adv/Kconfig.app"
+source "target/applications/led/Kconfig.app"
+source "target/applications/ble_adv/Kconfig.app"
 
 endchoice
 
