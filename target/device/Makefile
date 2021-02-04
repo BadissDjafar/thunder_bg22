@@ -3,4 +3,4 @@
 ################################################################################
 OBJS = startup_efr32bg22 system_efr32bg22
 
-include ../common.mk
+include ../../common.mk

@@ -3,4 +3,4 @@
 ################################################################################
 OBJS = nvm3_default nvm3_hal_flash nvm3_lock
 
-include ../../../common.mk
+include ../../../../common.mk

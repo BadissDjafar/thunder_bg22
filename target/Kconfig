@@ -1,8 +1,0 @@
-mainmenu "Silicon Labs Bluetooth"
-
-# General configuration options
-
-source "Kconfig.env"
-source "../boards/Kconfig"
-source "../soc/Kconfig"
-source "applications/Kconfig"

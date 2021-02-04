@@ -16,18 +16,18 @@ export PRJROOT = $(CONFIG_PRJROOT)
 export MAKE = $(CONFIG_MAKE)
 
 # include/lib path
-export IPATH = -I$(PRJROOT)/include -I$(PRJROOT)/include/CMSIS/include -I$(PRJROOT)/config -I$(PRJROOT)/drivers/emlib -I$(PRJROOT)/drivers/emdrv/gpiointerrupt -I$(PRJROOT)/drivers/bsp -I$(PRJROOT)/common  -I$(PRJROOT)/device -I$(PRJROOT)/RF/radio -I$(PRJROOT)/RF/bluetooth
-export LPATH = -L$(PRJROOT)/RF/bluetooth -L$(PRJROOT)/RF/radio -L$(PRJROOT)/drivers/emdrv/nvm3
+export IPATH = -I$(PRJROOT)/target/include -I$(PRJROOT)/target/include/CMSIS/include -I$(PRJROOT)/target/config -I$(PRJROOT)/target/drivers/emlib -I$(PRJROOT)/target/drivers/emdrv/gpiointerrupt -I$(PRJROOT)/target/drivers/bsp -I$(PRJROOT)/target/common  -I$(PRJROOT)/target/device -I$(PRJROOT)/target/RF/radio -I$(PRJROOT)/target/RF/bluetooth
+export LPATH = -L$(PRJROOT)/target/RF/bluetooth -L$(PRJROOT)/target/RF/radio -L$(PRJROOT)/target/drivers/emdrv/nvm3
 
 # compilation/linking flag
 export CFLAGS = -g -gdwarf-2 -mcpu=cortex-m33 -mthumb -std=c99 -DNVM3_DEFAULT_NVM_SIZE=24576 -DHAL_CONFIG=1 -D__StackLimit=0x20000000 -D__HEAP_SIZE=0xD00 -D__STACK_SIZE=0x800 -DEFR32BG22C224F512IM40=1 -mfpu=fpv5-sp-d16 -mfloat-abi=hard
-#export LDFLAGS = --gc-sections -nostartfiles -T $(PRJROOT)/device/efr32bg22c224f512im40.ld
-export LDFLAGS = -g -gdwarf-2 -mcpu=cortex-m33 -mthumb -T $(PRJROOT)/device/efr32bg22c224f512im40.ld -Xlinker --gc-sections -Xlinker -Map="system.map" -mfpu=fpv5-sp-d16 -mfloat-abi=hard --specs=nano.specs -lm 
+#export LDFLAGS = --gc-sections -nostartfiles -T $(PRJROOT)/target/device/efr32bg22c224f512im40.ld
+export LDFLAGS = -g -gdwarf-2 -mcpu=cortex-m33 -mthumb -T $(PRJROOT)/target/device/efr32bg22c224f512im40.ld -Xlinker --gc-sections -Xlinker -Map="system.map" -mfpu=fpv5-sp-d16 -mfloat-abi=hard --specs=nano.specs -lm 
 
 ################################################################################
 #                               directories layout                             #
 ################################################################################
-CLEAN_DIRS = common device drivers applications
+CLEAN_DIRS = target/common target/device target/drivers target/applications
 
 ################################################################################
 #                           APP TARGET DEFINITIONS                             #
@@ -43,8 +43,8 @@ menuconfig :
 
 led : led_compile
 	@echo -e "\033[1;35m[Linking $@]\033[0m"
-	#$(LD) $(LDFLAGS) $(LPATH) -Map="soc-empty.map" -lnvm3_CM33_gcc -lrail_efr32xg22_gcc_release -lbluetooth -lmbedtls $(PRJROOT)/RF/bluetooth/binapploader.o *.o -o $@.elf
-	$(CC) $(LDFLAGS) $(LPATH) *.o -lbluetooth -lrail_efr32xg22_gcc_release -lmbedtls $(PRJROOT)/RF/bluetooth/binapploader.o -lnvm3_CM33_gcc -o $@.elf -lgcc -lc -lnosys
+	#$(LD) $(LDFLAGS) $(LPATH) -Map="soc-empty.map" -lnvm3_CM33_gcc -lrail_efr32xg22_gcc_release -lbluetooth -lmbedtls $(PRJROOT)/target/RF/bluetooth/binapploader.o *.o -o $@.elf
+	$(CC) $(LDFLAGS) $(LPATH) *.o -lbluetooth -lrail_efr32xg22_gcc_release -lmbedtls $(PRJROOT)/target/RF/bluetooth/binapploader.o -lnvm3_CM33_gcc -o $@.elf -lgcc -lc -lnosys
 
 	@echo -e "\033[1;35m[OBJCPY ->> HEX & SREC images $@]\033[0m"
 	$(OBJCPY) -O ihex $@.elf $@.hex
@@ -53,8 +53,8 @@ led : led_compile
 
 ble_adv : ble_adv_compile
 	@echo -e "\033[1;35m[Linking $@]\033[0m"
-	#$(LD) $(LDFLAGS) $(LPATH) -Map="soc-empty.map" -lnvm3_CM33_gcc -lrail_efr32xg22_gcc_release -lbluetooth -lmbedtls $(PRJROOT)/RF/bluetooth/binapploader.o *.o -o $@.elf
-	$(CC) $(LDFLAGS) $(LPATH) *.o -lbluetooth -lrail_efr32xg22_gcc_release -lmbedtls $(PRJROOT)/RF/bluetooth/binapploader.o -lnvm3_CM33_gcc -o $@.elf -lgcc -lc -lnosys
+	#$(LD) $(LDFLAGS) $(LPATH) -Map="soc-empty.map" -lnvm3_CM33_gcc -lrail_efr32xg22_gcc_release -lbluetooth -lmbedtls $(PRJROOT)/target/RF/bluetooth/binapploader.o *.o -o $@.elf
+	$(CC) $(LDFLAGS) $(LPATH) *.o -lbluetooth -lrail_efr32xg22_gcc_release -lmbedtls $(PRJROOT)/target/RF/bluetooth/binapploader.o -lnvm3_CM33_gcc -o $@.elf -lgcc -lc -lnosys
 
 	@echo -e "\033[1;35m[OBJCPY ->> HEX & SREC images $@]\033[0m"
 	$(OBJCPY) -O ihex $@.elf $@.hex
@@ -63,7 +63,7 @@ ble_adv : ble_adv_compile
 
 accelerometer : accelerometer_compile
 	@echo -e "\033[1;35m[Linking $@]\033[0m"
-	#$(LD) $(LDFLAGS) $(LPATH) -Map="soc-empty.map" -lnvm3_CM33_gcc -lrail_efr32xg22_gcc_release -lbluetooth -lmbedtls $(PRJROOT)/RF/bluetooth/binapploader.o *.o -o $@.elf
+	#$(LD) $(LDFLAGS) $(LPATH) -Map="soc-empty.map" -lnvm3_CM33_gcc -lrail_efr32xg22_gcc_release -lbluetooth -lmbedtls $(PRJROOT)/target/RF/bluetooth/binapploader.o *.o -o $@.elf
 	$(CC) $(LDFLAGS) $(LPATH) *.o -o $@.elf -lgcc -lc -lnosys
 
 	@echo -e "\033[1;35m[OBJCPY ->> HEX & SREC images $@]\033[0m"
@@ -73,7 +73,7 @@ accelerometer : accelerometer_compile
 
 board_id : board_id_compile
 	@echo -e "\033[1;35m[Linking $@]\033[0m"
-	#$(LD) $(LDFLAGS) $(LPATH) -Map="soc-empty.map" -lnvm3_CM33_gcc -lrail_efr32xg22_gcc_release -lbluetooth -lmbedtls $(PRJROOT)/RF/bluetooth/binapploader.o *.o -o $@.elf
+	#$(LD) $(LDFLAGS) $(LPATH) -Map="soc-empty.map" -lnvm3_CM33_gcc -lrail_efr32xg22_gcc_release -lbluetooth -lmbedtls $(PRJROOT)/target/RF/bluetooth/binapploader.o *.o -o $@.elf
 	$(CC) $(LDFLAGS) $(LPATH) *.o -o $@.elf -lgcc -lc -lnosys
 
 	@echo -e "\033[1;35m[OBJCPY ->> HEX & SREC images $@]\033[0m"
@@ -86,17 +86,17 @@ board_id : board_id_compile
 ################################################################################
 led_compile : comn dev drv
 	@echo -e "\033[1;32m[Compiling $@]\033[0m"
-	$(MAKE) -C applications led_app
+	$(MAKE) -C target/applications led_app
 	@echo -e  "\033[1;32m[Finished $@]\033[0m"
 
 ble_adv_compile : comn dev drv
 	@echo -e "\033[1;32m[Compiling $@]\033[0m"
-	$(MAKE) -C applications ble_adv_app
+	$(MAKE) -C target/applications ble_adv_app
 	@echo -e  "\033[1;32m[Finished $@]\033[0m"
 
 accelerometer_compile : comn dev drv
 	@echo -e "\033[1;32m[Compiling $@]\033[0m"
-	$(MAKE) -C applications accelerometer_app
+	$(MAKE) -C target/applications accelerometer_app
 	@echo -e  "\033[1;32m[Finished $@]\033[0m"
 
 board_id_compile : comn dev drv
@@ -106,17 +106,17 @@ board_id_compile : comn dev drv
 
 comn :
 	@echo -e "\033[1;32m[Compiling $@]\033[0m"
-	$(MAKE) -C common all
+	$(MAKE) -C target/common all
 	@echo -e  "\033[1;32m[Finished $@]\033[0m"
 
 dev :
 	@echo -e "\033[1;32m[Compiling $@]\033[0m"
-	$(MAKE) -C device all
+	$(MAKE) -C target/device all
 	@echo -e  "\033[1;32m[Finished $@]\033[0m"
 
 drv :
 	@echo -e "\033[1;32m[Compiling $@]\033[0m"
-	$(MAKE) -C drivers all
+	$(MAKE) -C target/drivers all
 	@echo -e  "\033[1;32m[Finished $@]\033[0m"
 
 ################################################################################
@@ -133,7 +133,7 @@ usage list help:
 
 PHONY := clean all
 clean:
-	$(foreach DIR,$(CLEAN_DIRS),cd $(DIR) && make clean && cd .. &&) true
+	$(foreach DIR,$(CLEAN_DIRS),cd $(DIR) && make clean && cd ../.. &&) true
 	rm *.a *.o *~ 
 
 #Black        0;30     Dark Gray     1;30
