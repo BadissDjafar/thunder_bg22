@@ -16,18 +16,18 @@ export PRJROOT = $(CONFIG_PRJROOT)
 export MAKE = $(CONFIG_MAKE)
 
 # include/lib path
-export IPATH = -I$(PRJROOT)/target/include -I$(PRJROOT)/target/include/CMSIS/include -I$(PRJROOT)/target/config -I$(PRJROOT)/target/drivers/emlib -I$(PRJROOT)/target/drivers/emdrv/gpiointerrupt -I$(PRJROOT)/target/drivers/bsp -I$(PRJROOT)/target/common  -I$(PRJROOT)/target/device -I$(PRJROOT)/target/RF/radio -I$(PRJROOT)/target/RF/bluetooth
+export IPATH = -I$(PRJROOT)/include -I$(PRJROOT)/include/CMSIS/include -I$(PRJROOT)/target/config -I$(PRJROOT)/target/drivers/emlib -I$(PRJROOT)/target/drivers/emdrv/gpiointerrupt -I$(PRJROOT)/target/drivers/bsp -I$(PRJROOT)/target/common  -I$(PRJROOT)/soc/efr32bg22 -I$(PRJROOT)/target/RF/radio -I$(PRJROOT)/target/RF/bluetooth
 export LPATH = -L$(PRJROOT)/target/RF/bluetooth -L$(PRJROOT)/target/RF/radio -L$(PRJROOT)/target/drivers/emdrv/nvm3
 
 # compilation/linking flag
 export CFLAGS = -g -gdwarf-2 -mcpu=cortex-m33 -mthumb -std=c99 -DNVM3_DEFAULT_NVM_SIZE=24576 -DHAL_CONFIG=1 -D__StackLimit=0x20000000 -D__HEAP_SIZE=0xD00 -D__STACK_SIZE=0x800 -DEFR32BG22C224F512IM40=1 -mfpu=fpv5-sp-d16 -mfloat-abi=hard
-#export LDFLAGS = --gc-sections -nostartfiles -T $(PRJROOT)/target/device/efr32bg22c224f512im40.ld
-export LDFLAGS = -g -gdwarf-2 -mcpu=cortex-m33 -mthumb -T $(PRJROOT)/target/device/efr32bg22c224f512im40.ld -Xlinker --gc-sections -Xlinker -Map="system.map" -mfpu=fpv5-sp-d16 -mfloat-abi=hard --specs=nano.specs -lm 
+#export LDFLAGS = --gc-sections -nostartfiles -T $(PRJROOT)/soc/efr32bg22/efr32bg22c224f512im40.ld
+export LDFLAGS = -g -gdwarf-2 -mcpu=cortex-m33 -mthumb -T $(PRJROOT)/soc/efr32bg22/efr32bg22c224f512im40.ld -Xlinker --gc-sections -Xlinker -Map="system.map" -mfpu=fpv5-sp-d16 -mfloat-abi=hard --specs=nano.specs -lm 
 
 ################################################################################
 #                               directories layout                             #
 ################################################################################
-CLEAN_DIRS = target/common target/device target/drivers target/applications
+CLEAN_DIRS = target/common soc/efr32bg22 target/drivers applications
 
 ################################################################################
 #                           APP TARGET DEFINITIONS                             #
@@ -86,17 +86,17 @@ board_id : board_id_compile
 ################################################################################
 led_compile : comn dev drv
 	@echo -e "\033[1;32m[Compiling $@]\033[0m"
-	$(MAKE) -C target/applications led_app
+	$(MAKE) -C applications led_app
 	@echo -e  "\033[1;32m[Finished $@]\033[0m"
 
 ble_adv_compile : comn dev drv
 	@echo -e "\033[1;32m[Compiling $@]\033[0m"
-	$(MAKE) -C target/applications ble_adv_app
+	$(MAKE) -C applications ble_adv_app
 	@echo -e  "\033[1;32m[Finished $@]\033[0m"
 
 accelerometer_compile : comn dev drv
 	@echo -e "\033[1;32m[Compiling $@]\033[0m"
-	$(MAKE) -C target/applications accelerometer_app
+	$(MAKE) -C applications accelerometer_app
 	@echo -e  "\033[1;32m[Finished $@]\033[0m"
 
 board_id_compile : comn dev drv
@@ -111,7 +111,7 @@ comn :
 
 dev :
 	@echo -e "\033[1;32m[Compiling $@]\033[0m"
-	$(MAKE) -C target/device all
+	$(MAKE) -C soc/efr32bg22 all
 	@echo -e  "\033[1;32m[Finished $@]\033[0m"
 
 drv :
@@ -134,7 +134,7 @@ usage list help:
 PHONY := clean all
 clean:
 	$(foreach DIR,$(CLEAN_DIRS),cd $(DIR) && make clean && cd ../.. &&) true
-	rm *.a *.o *~ 
+	rm *.a *.o *~ *.hex *.srec *.elf *.map
 
 #Black        0;30     Dark Gray     1;30
 #Red          0;31     Light Red     1;31

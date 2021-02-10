@@ -1,6 +1,6 @@
 ################################################################################
-#                           basic animation build file                         #
+#                             basic build file                                 #
 ################################################################################
-OBJS = startup_efr32bg22 system_efr32bg22
+OBJS = main app
 
 include ../../common.mk
