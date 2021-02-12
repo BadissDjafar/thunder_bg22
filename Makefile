@@ -16,7 +16,7 @@ export PRJROOT = $(CONFIG_PRJROOT)
 export MAKE = $(CONFIG_MAKE)
 
 # include/lib path
-export IPATH = -I$(PRJROOT)/include -I$(PRJROOT)/include/CMSIS/include -I$(PRJROOT)/target/config -I$(PRJROOT)/target/drivers/emlib -I$(PRJROOT)/target/drivers/emdrv/gpiointerrupt -I$(PRJROOT)/target/drivers/bsp -I$(PRJROOT)/target/common  -I$(PRJROOT)/soc/efr32bg22 -I$(PRJROOT)/target/RF/radio -I$(PRJROOT)/target/RF/bluetooth
+export IPATH = -I$(PRJROOT)/include -I$(PRJROOT)/include/CMSIS/include -I$(PRJROOT)/target/config -I$(PRJROOT)/target/drivers/emlib -I$(PRJROOT)/target/drivers/emdrv/gpiointerrupt -I$(PRJROOT)/target/common -I$(PRJROOT)/target/RF/radio -I$(PRJROOT)/target/RF/bluetooth -I$(PRJROOT)/soc/efr32bg22 -I$(PRJROOT)/boards/thunderboard_bg22  
 export LPATH = -L$(PRJROOT)/target/RF/bluetooth -L$(PRJROOT)/target/RF/radio -L$(PRJROOT)/target/drivers/emdrv/nvm3
 
 # compilation/linking flag
@@ -27,7 +27,7 @@ export LDFLAGS = -g -gdwarf-2 -mcpu=cortex-m33 -mthumb -T $(PRJROOT)/soc/efr32bg
 ################################################################################
 #                               directories layout                             #
 ################################################################################
-CLEAN_DIRS = target/common soc/efr32bg22 target/drivers applications
+CLEAN_DIRS = target/common soc/efr32bg22 target/drivers applications boards/thunderboard_bg22
 
 ################################################################################
 #                           APP TARGET DEFINITIONS                             #
@@ -116,6 +116,7 @@ dev :
 
 drv :
 	@echo -e "\033[1;32m[Compiling $@]\033[0m"
+	$(MAKE) -C boards/thunderboard_bg22 all
 	$(MAKE) -C target/drivers all
 	@echo -e  "\033[1;32m[Finished $@]\033[0m"
 
@@ -133,7 +134,7 @@ usage list help:
 
 PHONY := clean all
 clean:
-	$(foreach DIR,$(CLEAN_DIRS),cd $(DIR) && make clean && cd ../.. &&) true
+	$(foreach DIR,$(CLEAN_DIRS),cd $(DIR) && make clean && cd $(PRJROOT) &&) true
 	rm *.a *.o *~ *.hex *.srec *.elf *.map
 
 #Black        0;30     Dark Gray     1;30

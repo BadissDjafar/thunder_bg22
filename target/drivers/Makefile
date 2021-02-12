@@ -1,7 +1,7 @@
 ################################################################################
 #                           basic animation build file                         #
 ################################################################################
-DIRS = bsp emlib emdrv
+DIRS = emlib emdrv
 
 all :
 	$(foreach DIR,$(DIRS),cd $(DIR) && make && cd .. &&) true

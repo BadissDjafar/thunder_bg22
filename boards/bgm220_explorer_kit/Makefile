@@ -1,6 +1,6 @@
 ################################################################################
 #                             basic build file                                 #
 ################################################################################
-OBJS = bsp_stk i2cspm mx25flash_spi retargetio retargetserial
+OBJS = application_properties init_app init_board init_mcu pti sl_sleeptimer sl_sleeptimer_hal_rtcc
 
-include ../../../common.mk
+include ../../common.mk
