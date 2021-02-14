@@ -54,8 +54,8 @@ int main(void)
 
   /* LED test */
   CMU_ClockEnable(cmuClock_GPIO,true);
-  GPIO_PinModeSet(gpioPortB,2,gpioModePushPull,0);
-  GPIO_PinOutSet(gpioPortB,2);
+  GPIO_PinModeSet(BSP_LED0_PORT,BSP_LED0_PIN,gpioModePushPull,0);
+  GPIO_PinOutSet(BSP_LED0_PORT,BSP_LED0_PIN);
 
   for(;;){};
 }

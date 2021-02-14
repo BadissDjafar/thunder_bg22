@@ -1,6 +1,0 @@
-################################################################################
-#                             basic build file                                 #
-################################################################################
-OBJS = application_properties init_app init_board init_mcu pti sl_sleeptimer sl_sleeptimer_hal_rtcc
-
-include ../../common.mk

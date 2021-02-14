@@ -1,0 +1,18 @@
+
+#
+# Project root directory, compiler
+#
+CONFIG_PRJROOT="C:/Projects/silabs_bluetooth"
+CONFIG_CROSS_CC="arm-none-eabi-gcc.exe"
+CONFIG_CROSS_LD="arm-none-eabi-ld.exe"
+CONFIG_CROSS_OBJCPY="arm-none-eabi-objcopy.exe"
+CONFIG_CROSS_DUMP="arm-none-eabi-objdump.exe"
+CONFIG_MAKE="make.exe"
+# end of Project root directory, compiler
+
+CONFIG_BOARD_EFR32BG22_SLTB010A=y
+# CONFIG_SOC_SERIES_EFR32BGM220 is not set
+CONFIG_SOC_SERIES_EFR32BG22=y
+# CONFIG_SOC_SERIES_EFR32BG21 is not set
+# CONFIG_APP_LED is not set
+CONFIG_APP_BLE_ADV=y

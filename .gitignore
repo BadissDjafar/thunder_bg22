@@ -18,8 +18,8 @@
 
 # Libraries
 *.lib
-*.a
 *.la
+*.a
 *.lo
 
 # Shared objects (inc. Windows DLLs)
@@ -49,3 +49,4 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+/__pycache__/
