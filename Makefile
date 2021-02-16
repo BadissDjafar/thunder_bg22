@@ -21,7 +21,6 @@ export LPATH = -L$(PRJROOT)/libs/efr32bg22/RF/bluetooth -L$(PRJROOT)/libs/efr32b
 
 # compilation/linking flag
 export CFLAGS = -g -gdwarf-2 -mcpu=cortex-m33 -mthumb -std=c99 -DNVM3_DEFAULT_NVM_SIZE=24576 -DHAL_CONFIG=1 -D__StackLimit=0x20000000 -D__HEAP_SIZE=0xD00 -D__STACK_SIZE=0x800 -DEFR32BG22C224F512IM40=1 -mfpu=fpv5-sp-d16 -mfloat-abi=hard
-#export LDFLAGS = --gc-sections -nostartfiles -T $(PRJROOT)/soc/efr32bg22/efr32bg22c224f512im40.ld
 export LDFLAGS = -g -gdwarf-2 -mcpu=cortex-m33 -mthumb -T $(PRJROOT)/soc/efr32bg22/efr32bg22c224f512im40.ld -Xlinker --gc-sections -Xlinker -Map="system.map" -mfpu=fpv5-sp-d16 -mfloat-abi=hard --specs=nano.specs -lm 
 
 ################################################################################
@@ -147,8 +146,8 @@ usage list help:
 	@echo -e "\033[1;36m[Listing available target for build : ]\033[0m"
 	@echo -e "\033[1;36m[	all             - builds all applications ]\033[0m"
 	@echo -e "\033[1;36m[	led             - builds the LED app      ]\033[0m"
-#	@echo -e "\033[1;36m[	ble_adv         - builds the apps         ]\033[0m"
-#	@echo -e "\033[1;36m[	accelerometer   - builds the apps         ]\033[0m"
+	@echo -e "\033[1;36m[	ble_adv         - builds the apps         ]\033[0m"
+	@echo -e "\033[1;36m[	accelerometer   - builds the apps         ]\033[0m"
 	@echo -e "\033[1;36m[	clean           - clean all built files   ]\033[0m"
 
 PHONY := clean all
@@ -164,11 +163,3 @@ clean:
 #Purple       0;35     Light Purple  1;35
 #Cyan         0;36     Light Cyan    1;36
 #Light Gray   0;37     White         1;37
-#
-#APPS = sha256_fast sha256 matrixMul_0 matrixMul_1 matrixMul_2
-#
-#all :
-#	$(foreach APP,$(APPS),cd $(APP) && make && cd .. &&) true
-#
-#clean:
-#	$(foreach APP,$(APPS),cd $(APP) && make clean && cd .. &&) true
