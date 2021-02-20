@@ -15,25 +15,51 @@ export DUMP = $(CONFIG_CROSS_OBJDUMP)
 export PRJROOT = $(CONFIG_PRJROOT)
 export MAKE = $(CONFIG_MAKE)
 
+ifeq ($(CONFIG_BOARD_EFR32BG22_SLTB010A),y)
+	export LIBS = libs/efr32bg22
+	export BOARD = boards/thunderboard_bg22
+	export SOC = soc/efr32bg22
+	CHIP := EFR32BG22C224F512IM40
+	LINKER_SCRIPT := efr32bg22c224f512im40
+	RADIO_LIB := rail_efr32xg22_gcc_release
+endif
+
+ifeq ($(CONFIG_BOARD_EFR32BGM220_EXP_KIT),y)
+	export LIBS = libs/bgm220
+	export BOARD = boards/bgm220_explorer_kit
+	export SOC = soc/bgm220
+	CHIP := BGM220PC22HNA
+	LINKER_SCRIPT := bgm220pc22hna
+	RADIO_LIB := rail_module_efr32xg22_gcc_release rail_config_bgm220pc22hna_gcc
+endif
+
+ifeq ($(CONFIG_APP_LED),y)
+	TARGET = led
+endif
+
+ifeq ($(CONFIG_APP_BLE_ADV),y)
+	TARGET = ble_adv
+endif
+
 # include/lib path
-export IPATH = -I$(PRJROOT)/include -I$(PRJROOT)/include/CMSIS/include -I$(PRJROOT)/drivers/emlib -I$(PRJROOT)/drivers/emdrv/gpiointerrupt -I$(PRJROOT)/libs/efr32bg22/RF/radio -I$(PRJROOT)/libs/efr32bg22/RF/bluetooth -I$(PRJROOT)/soc/efr32bg22 -I$(PRJROOT)/boards/thunderboard_bg22  
-export LPATH = -L$(PRJROOT)/libs/efr32bg22/RF/bluetooth -L$(PRJROOT)/libs/efr32bg22/RF/radio -L$(PRJROOT)/drivers/emdrv/nvm3
+export IPATH = -I$(PRJROOT)/include -I$(PRJROOT)/include/CMSIS/include -I$(PRJROOT)/drivers/emlib -I$(PRJROOT)/drivers/emdrv/gpiointerrupt -I$(PRJROOT)/$(LIBS)/RF/radio -I$(PRJROOT)/$(LIBS)/RF/bluetooth -I$(PRJROOT)/$(SOC) -I$(PRJROOT)/$(BOARD)  
+export LPATH = -L$(PRJROOT)/$(LIBS)/RF/bluetooth -L$(PRJROOT)/$(LIBS)/RF/radio -L$(PRJROOT)/drivers/emdrv/nvm3
 
 # compilation/linking flag
-export CFLAGS = -g -gdwarf-2 -mcpu=cortex-m33 -mthumb -std=c99 -DNVM3_DEFAULT_NVM_SIZE=24576 -DHAL_CONFIG=1 -D__StackLimit=0x20000000 -D__HEAP_SIZE=0xD00 -D__STACK_SIZE=0x800 -DEFR32BG22C224F512IM40=1 -mfpu=fpv5-sp-d16 -mfloat-abi=hard
-export LDFLAGS = -g -gdwarf-2 -mcpu=cortex-m33 -mthumb -T $(PRJROOT)/soc/efr32bg22/efr32bg22c224f512im40.ld -Xlinker --gc-sections -Xlinker -Map="system.map" -mfpu=fpv5-sp-d16 -mfloat-abi=hard --specs=nano.specs -lm 
+export CFLAGS = -g -gdwarf-2 -mcpu=cortex-m33 -mthumb -std=c99 -DNVM3_DEFAULT_NVM_SIZE=24576 -DHAL_CONFIG=1 -D__StackLimit=0x20000000 -D__HEAP_SIZE=0xD00 -D__STACK_SIZE=0x800 -D$(CHIP)=1 -mfpu=fpv5-sp-d16 -mfloat-abi=hard
+export LDFLAGS = -g -gdwarf-2 -mcpu=cortex-m33 -mthumb -T $(PRJROOT)/$(SOC)/$(LINKER_SCRIPT).ld -Xlinker --gc-sections -Xlinker -Map="system.map" -mfpu=fpv5-sp-d16 -mfloat-abi=hard --specs=nano.specs -lm 
 
 ################################################################################
 #                               directories layout                             #
 ################################################################################
-CLEAN_DIRS = soc/efr32bg22 drivers applications boards/thunderboard_bg22
+CLEAN_DIRS = $(SOC) $(BOARD) drivers applications
 
 ################################################################################
 #                           APP TARGET DEFINITIONS                             #
 ################################################################################
 default : usage
 
-all : led ble_adv
+all : $(TARGET)
 
 menuconfig : 
 	@echo -e "\033[1;35m[Menuconfig $@]\033[0m"
@@ -42,7 +68,7 @@ menuconfig :
 
 led : led_compile
 	@echo -e "\033[1;35m[Linking $@]\033[0m"
-	$(CC) $(LDFLAGS) $(LPATH) *.o -lrail_efr32xg22_gcc_release $(PRJROOT)/libs/efr32bg22/RF/bluetooth/binapploader.o -lnvm3_CM33_gcc -o $@.elf -lgcc -lc -lnosys
+	$(CC) $(LDFLAGS) $(LPATH) *.o $(addprefix -l,$(RADIO_LIB)) $(PRJROOT)/libs/efr32bg22/RF/bluetooth/binapploader.o -lnvm3_CM33_gcc -o $@.elf -lgcc -lc -lnosys
 
 	@echo -e "\033[1;35m[OBJCPY ->> HEX & SREC images $@]\033[0m"
 	$(OBJCPY) -O ihex $@.elf $@.hex
@@ -51,7 +77,7 @@ led : led_compile
 
 led_heartbeat : led_heartbeat_compile
 	@echo -e "\033[1;35m[Linking $@]\033[0m"
-	$(CC) $(LDFLAGS) $(LPATH) *.o -lrail_efr32xg22_gcc_release $(PRJROOT)/libs/efr32bg22/RF/bluetooth/binapploader.o -lnvm3_CM33_gcc -o $@.elf -lgcc -lc -lnosys
+	$(CC) $(LDFLAGS) $(LPATH) *.o $(addprefix -l,$(RADIO_LIB)) $(PRJROOT)/libs/efr32bg22/RF/bluetooth/binapploader.o -lnvm3_CM33_gcc -o $@.elf -lgcc -lc -lnosys
 
 	@echo -e "\033[1;35m[OBJCPY ->> HEX & SREC images $@]\033[0m"
 	$(OBJCPY) -O ihex $@.elf $@.hex
@@ -60,7 +86,7 @@ led_heartbeat : led_heartbeat_compile
 
 timer : timer_compile
 	@echo -e "\033[1;35m[Linking $@]\033[0m"
-	$(CC) $(LDFLAGS) $(LPATH) *.o -lrail_efr32xg22_gcc_release $(PRJROOT)/libs/efr32bg22/RF/bluetooth/binapploader.o -lnvm3_CM33_gcc -o $@.elf -lgcc -lc -lnosys
+	$(CC) $(LDFLAGS) $(LPATH) *.o $(addprefix -l,$(RADIO_LIB)) $(PRJROOT)/libs/efr32bg22/RF/bluetooth/binapploader.o -lnvm3_CM33_gcc -o $@.elf -lgcc -lc -lnosys
 
 	@echo -e "\033[1;35m[OBJCPY ->> HEX & SREC images $@]\033[0m"
 	$(OBJCPY) -O ihex $@.elf $@.hex
@@ -69,7 +95,7 @@ timer : timer_compile
 
 ble_adv : ble_adv_compile
 	@echo -e "\033[1;35m[Linking $@]\033[0m"
-	$(CC) $(LDFLAGS) $(LPATH) *.o -lbluetooth -lrail_efr32xg22_gcc_release -lmbedtls $(PRJROOT)/libs/efr32bg22/RF/bluetooth/binapploader.o -lnvm3_CM33_gcc -o $@.elf -lgcc -lc -lnosys
+	$(CC) $(LDFLAGS) $(LPATH) *.o -lbluetooth $(addprefix -l,$(RADIO_LIB)) -lmbedtls $(PRJROOT)/libs/efr32bg22/RF/bluetooth/binapploader.o -lnvm3_CM33_gcc -o $@.elf -lgcc -lc -lnosys
 
 	@echo -e "\033[1;35m[OBJCPY ->> HEX & SREC images $@]\033[0m"
 	$(OBJCPY) -O ihex $@.elf $@.hex
@@ -129,12 +155,12 @@ board_id_compile : dev drv
 
 dev :
 	@echo -e "\033[1;32m[Compiling $@]\033[0m"
-	$(MAKE) -C soc/efr32bg22 all
+	$(MAKE) -C $(SOC) all
 	@echo -e  "\033[1;32m[Finished $@]\033[0m"
 
 drv :
 	@echo -e "\033[1;32m[Compiling $@]\033[0m"
-	$(MAKE) -C boards/thunderboard_bg22 all
+	$(MAKE) -C $(BOARD) all
 	$(MAKE) -C drivers all
 	@echo -e  "\033[1;32m[Finished $@]\033[0m"
 
@@ -150,10 +176,13 @@ usage list help:
 	@echo -e "\033[1;36m[	accelerometer   - builds the apps         ]\033[0m"
 	@echo -e "\033[1;36m[	clean           - clean all built files   ]\033[0m"
 
-PHONY := clean all
+PHONY := clean mrproper all
 clean:
 	$(foreach DIR,$(CLEAN_DIRS),cd $(DIR) && make clean && cd $(PRJROOT) &&) true
 	rm *.a *.o *~ *.hex *.srec *.elf *.map
+
+mrproper: clean
+	rm .config .config.old
 
 #Black        0;30     Dark Gray     1;30
 #Red          0;31     Light Red     1;31

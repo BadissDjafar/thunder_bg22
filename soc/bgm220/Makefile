@@ -3,4 +3,4 @@
 ################################################################################
 OBJS = startup_bgm22 system_bgm22
 
-include ../common.mk
+include ../../common.mk
