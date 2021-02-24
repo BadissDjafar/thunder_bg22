@@ -10,9 +10,8 @@ CONFIG_CROSS_DUMP="arm-none-eabi-objdump.exe"
 CONFIG_MAKE="make.exe"
 # end of Project root directory, compiler
 
+# CONFIG_BOARD_EFR32BGM220_EXP_KIT is not set
 CONFIG_BOARD_EFR32BG22_SLTB010A=y
-# CONFIG_SOC_SERIES_EFR32BGM220 is not set
 CONFIG_SOC_SERIES_EFR32BG22=y
-# CONFIG_SOC_SERIES_EFR32BG21 is not set
 # CONFIG_APP_LED is not set
 CONFIG_APP_BLE_ADV=y
