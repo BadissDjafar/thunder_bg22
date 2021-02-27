@@ -1,3 +1,30 @@
+<a href="https://www.bluetooth.com">
+<p align="center">
+  <img src="https://www.bluetooth.com/wp-content/themes/bluetooth/images/logos/bluetooth-logo-color-black.svg">
+</p>
+</a>
+
+<table border="0">
+  <tr>
+    <td align="left" valign="middle">
+    <h1>EFR32 Bluetooth Mesh Stack Feature Examples</h1>
+  </td>
+  <td align="left" valign="middle">
+    <a href="https://www.silabs.com/wireless/bluetooth">
+      <img src="https://www.silabs.com/etc.clientlibs/siliconlabs/clientlibs/clientlib-global/resources/images/redesign-logo.png"  title="Silicon Labs Gecko and Wireless Gecko MCUs" alt="Silabs Logo" width="250"/>
+    </a>
+  </td>
+  </tr>
+</table>
+
+<a href="https://docs.silabs.com/bluetooth/latest/">
+<img src="https://img.shields.io/badge/Silabs%20Bluetooth%20Mesh-documentation-blue.svg?longCache=true">
+</a>
+
+<a href="https://www.zlib.net/zlib_license.html">
+<img src="https://img.shields.io/badge/Zlib-license-lightgrey.svg?longCache=true">
+</a>
+
 # Silicon Labs Bluetooth standalone repository
 
 This repository agregates a collection of bluetooth application examples based on silabs series 2 chip families.
