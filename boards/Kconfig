@@ -4,6 +4,7 @@ choice
 
 source "boards/bgm220_explorer_kit/Kconfig.board"
 source "boards/thunderboard_bg22/Kconfig.board"
+source "boards/brd4181a01/Kconfig.board"
 
 endchoice
 
