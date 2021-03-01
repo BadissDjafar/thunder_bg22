@@ -33,6 +33,15 @@ ifeq ($(CONFIG_BOARD_EFR32BGM220_EXP_KIT),y)
 	RADIO_LIB := rail_module_efr32xg22_gcc_release rail_config_bgm220pc22hna_gcc
 endif
 
+ifeq ($(CONFIG_BOARD_EFR32MG21_BRD4181A01),y)
+	export LIBS = libs/efr32mg21
+	export BOARD = boards/brd4181a01
+	export SOC = soc/efr32bg21
+	CHIP := EFR32MG21A020F1024IM32
+	LINKER_SCRIPT := efr32bg21
+	RADIO_LIB := rail_efr32xg21_gcc_release
+endif
+
 ifeq ($(CONFIG_APP_LED),y)
 	TARGET = led
 endif
@@ -66,54 +75,9 @@ menuconfig :
 	python3.exe menuconfig.py Kconfig
 	@echo -e  "\033[1;32m[Finished $@]\033[0m"
 
-led : led_compile
+$(TARGET) : $(TARGET)_compile
 	@echo -e "\033[1;35m[Linking $@]\033[0m"
-	$(CC) $(LDFLAGS) $(LPATH) *.o $(addprefix -l,$(RADIO_LIB)) $(PRJROOT)/libs/efr32bg22/RF/bluetooth/binapploader.o -lnvm3_CM33_gcc -o $@.elf -lgcc -lc -lnosys
-
-	@echo -e "\033[1;35m[OBJCPY ->> HEX & SREC images $@]\033[0m"
-	$(OBJCPY) -O ihex $@.elf $@.hex
-	$(OBJCPY) -O srec $@.elf $@.srec
-	@echo -e  "\033[1;32m[Finished $@]\033[0m"
-
-led_heartbeat : led_heartbeat_compile
-	@echo -e "\033[1;35m[Linking $@]\033[0m"
-	$(CC) $(LDFLAGS) $(LPATH) *.o $(addprefix -l,$(RADIO_LIB)) $(PRJROOT)/libs/efr32bg22/RF/bluetooth/binapploader.o -lnvm3_CM33_gcc -o $@.elf -lgcc -lc -lnosys
-
-	@echo -e "\033[1;35m[OBJCPY ->> HEX & SREC images $@]\033[0m"
-	$(OBJCPY) -O ihex $@.elf $@.hex
-	$(OBJCPY) -O srec $@.elf $@.srec
-	@echo -e  "\033[1;32m[Finished $@]\033[0m"
-
-timer : timer_compile
-	@echo -e "\033[1;35m[Linking $@]\033[0m"
-	$(CC) $(LDFLAGS) $(LPATH) *.o $(addprefix -l,$(RADIO_LIB)) $(PRJROOT)/libs/efr32bg22/RF/bluetooth/binapploader.o -lnvm3_CM33_gcc -o $@.elf -lgcc -lc -lnosys
-
-	@echo -e "\033[1;35m[OBJCPY ->> HEX & SREC images $@]\033[0m"
-	$(OBJCPY) -O ihex $@.elf $@.hex
-	$(OBJCPY) -O srec $@.elf $@.srec
-	@echo -e  "\033[1;32m[Finished $@]\033[0m"
-
-ble_adv : ble_adv_compile
-	@echo -e "\033[1;35m[Linking $@]\033[0m"
-	$(CC) $(LDFLAGS) $(LPATH) *.o -lbluetooth $(addprefix -l,$(RADIO_LIB)) -lmbedtls $(PRJROOT)/libs/efr32bg22/RF/bluetooth/binapploader.o -lnvm3_CM33_gcc -o $@.elf -lgcc -lc -lnosys
-
-	@echo -e "\033[1;35m[OBJCPY ->> HEX & SREC images $@]\033[0m"
-	$(OBJCPY) -O ihex $@.elf $@.hex
-	$(OBJCPY) -O srec $@.elf $@.srec
-	@echo -e  "\033[1;32m[Finished $@]\033[0m"
-
-accelerometer : accelerometer_compile
-	@echo -e "\033[1;35m[Linking $@]\033[0m"
-	$(CC) $(LDFLAGS) $(LPATH) *.o -o $@.elf -lgcc -lc -lnosys
-
-	@echo -e "\033[1;35m[OBJCPY ->> HEX & SREC images $@]\033[0m"
-	$(OBJCPY) -O ihex $@.elf $@.hex
-	$(OBJCPY) -O srec $@.elf $@.srec
-	@echo -e  "\033[1;32m[Finished $@]\033[0m"
-
-board_id : board_id_compile
-	@echo -e "\033[1;35m[Linking $@]\033[0m"
-	$(CC) $(LDFLAGS) $(LPATH) *.o -o $@.elf -lgcc -lc -lnosys
+	$(CC) $(LDFLAGS) $(LPATH) *.o -lbluetooth $(addprefix -l,$(RADIO_LIB)) -lmbedtls $(PRJROOT)/$(LIBS)/RF/bluetooth/binapploader.o -lnvm3_CM33_gcc -o $@.elf -lgcc -lc -lnosys
 
 	@echo -e "\033[1;35m[OBJCPY ->> HEX & SREC images $@]\033[0m"
 	$(OBJCPY) -O ihex $@.elf $@.hex
@@ -123,34 +87,9 @@ board_id : board_id_compile
 ################################################################################
 #                             BUILD TARGETS                                    #
 ################################################################################
-led_compile : dev drv
+$(TARGET)_compile : dev drv
 	@echo -e "\033[1;32m[Compiling $@]\033[0m"
-	$(MAKE) -C applications led_app
-	@echo -e  "\033[1;32m[Finished $@]\033[0m"
-
-led_heartbeat_compile : dev drv
-	@echo -e "\033[1;32m[Compiling $@]\033[0m"
-	$(MAKE) -C applications led_heartbeat_app
-	@echo -e  "\033[1;32m[Finished $@]\033[0m"
-
-timer_compile : dev drv
-	@echo -e "\033[1;32m[Compiling $@]\033[0m"
-	$(MAKE) -C applications timer_app
-	@echo -e  "\033[1;32m[Finished $@]\033[0m"
-
-ble_adv_compile : dev drv
-	@echo -e "\033[1;32m[Compiling $@]\033[0m"
-	$(MAKE) -C applications ble_adv_app
-	@echo -e  "\033[1;32m[Finished $@]\033[0m"
-
-accelerometer_compile : dev drv
-	@echo -e "\033[1;32m[Compiling $@]\033[0m"
-	$(MAKE) -C applications accelerometer_app
-	@echo -e  "\033[1;32m[Finished $@]\033[0m"
-
-board_id_compile : dev drv
-	@echo -e "\033[1;32m[Compiling $@]\033[0m"
-	$(MAKE) -C applications board_id_app
+	$(MAKE) -C applications $(TARGET)_app
 	@echo -e  "\033[1;32m[Finished $@]\033[0m"
 
 dev :
