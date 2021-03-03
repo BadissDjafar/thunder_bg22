@@ -37,7 +37,7 @@ ifeq ($(CONFIG_BOARD_EFR32MG21_BRD4181A01),y)
 	export LIBS = libs/efr32mg21
 	export BOARD = boards/brd4181a01
 	export SOC = soc/efr32bg21
-	CHIP := EFR32MG21A020F1024IM32
+	CHIP := EFR32BG21A020F1024IM32
 	LINKER_SCRIPT := efr32bg21
 	RADIO_LIB := rail_efr32xg21_gcc_release
 endif

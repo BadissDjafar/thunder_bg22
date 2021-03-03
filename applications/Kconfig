@@ -6,4 +6,3 @@ source "applications/led/Kconfig.app"
 source "applications/ble_adv/Kconfig.app"
 
 endchoice
-
