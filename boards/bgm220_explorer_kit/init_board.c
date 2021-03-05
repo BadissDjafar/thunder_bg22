@@ -73,4 +73,6 @@ void initBoard(void)
 
 void initVcomEnable(void)
 {
+  CMU_ClockEnable(cmuClock_GPIO, true);
+  GPIO_PinModeSet(BSP_VCOM_ENABLE_PORT,BSP_VCOM_ENABLE_PIN,gpioModePushPull,0);
 }

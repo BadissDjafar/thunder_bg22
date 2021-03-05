@@ -38,16 +38,8 @@ ifeq ($(CONFIG_BOARD_EFR32MG21_BRD4181A01),y)
 	export BOARD = boards/brd4181a01
 	export SOC = soc/efr32bg21
 	CHIP := EFR32BG21A020F1024IM32
-	LINKER_SCRIPT := efr32bg21
+	LINKER_SCRIPT := efr32mg21a010f1024im32
 	RADIO_LIB := rail_efr32xg21_gcc_release
-endif
-
-ifeq ($(CONFIG_APP_LED),y)
-	TARGET = led
-endif
-
-ifeq ($(CONFIG_APP_BLE_ADV),y)
-	TARGET = ble_adv
 endif
 
 # include/lib path
@@ -57,6 +49,24 @@ export LPATH = -L$(PRJROOT)/$(LIBS)/RF/bluetooth -L$(PRJROOT)/$(LIBS)/RF/radio -
 # compilation/linking flag
 export CFLAGS = -g -gdwarf-2 -mcpu=cortex-m33 -mthumb -std=c99 -DNVM3_DEFAULT_NVM_SIZE=24576 -DHAL_CONFIG=1 -D__StackLimit=0x20000000 -D__HEAP_SIZE=0xD00 -D__STACK_SIZE=0x800 -D$(CHIP)=1 -mfpu=fpv5-sp-d16 -mfloat-abi=hard
 export LDFLAGS = -g -gdwarf-2 -mcpu=cortex-m33 -mthumb -T $(PRJROOT)/$(SOC)/$(LINKER_SCRIPT).ld -Xlinker --gc-sections -Xlinker -Map="system.map" -mfpu=fpv5-sp-d16 -mfloat-abi=hard --specs=nano.specs -lm 
+
+ifeq ($(CONFIG_APP_LED),y)
+	TARGET = led
+endif
+
+ifeq ($(CONFIG_APP_BLE_ADV),y)
+	TARGET = ble_adv
+endif
+
+ifeq ($(CONFIG_APP_CPUID),y)
+	TARGET = cpuid
+endif
+
+ifeq ($(CONFIG_APP_ACCELEROMETER_BMA440),y)
+	TARGET = accelerometer
+	IPATH += -I$(PRJROOT)/drivers/emdrv/ustimer 
+endif
+
 
 ################################################################################
 #                               directories layout                             #

@@ -57,6 +57,11 @@ int main(void)
   GPIO_PinModeSet(BSP_LED0_PORT,BSP_LED0_PIN,gpioModePushPull,0);
   GPIO_PinOutSet(BSP_LED0_PORT,BSP_LED0_PIN);
 
+  if( BSP_LED_COUNT > 1 )
+  {
+    GPIO_PinModeSet(BSP_LED1_PORT,BSP_LED1_PIN,gpioModePushPull,0);
+    GPIO_PinOutSet(BSP_LED1_PORT,BSP_LED1_PIN);
+  }
   for(;;){};
 }
 

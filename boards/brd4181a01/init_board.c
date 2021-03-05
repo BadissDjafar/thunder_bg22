@@ -94,4 +94,9 @@ void initVcomEnable(void)
   GPIO_PinModeSet(ENABLE_PORT, ENABLE_PIN, gpioModePushPull, COMMON_ENABLE);
 
 #endif
+
+  CMU_ClockEnable(cmuClock_GPIO, true);
+
+  //Enable if requested
+  GPIO_PinModeSet(ENABLE_PORT, ENABLE_PIN, gpioModePushPull, COMMON_ENABLE);
 }

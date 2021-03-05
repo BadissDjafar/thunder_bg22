@@ -2,7 +2,14 @@ choice
   prompt "Choose your application"
   default APP_LED
 
+# Non BLE Examples
 source "applications/led/Kconfig.app"
+source "applications/accelerometer/Kconfig.app"
+source "applications/cpuid/Kconfig.app"
+
+# BLE Examples
 source "applications/ble_adv/Kconfig.app"
+
+# Bluetooth Mesh Examples
 
 endchoice
