@@ -50,6 +50,26 @@
 /*                                     Macros                                 */
 /* ########################################################################## */
 
+/* System control block */
+#define CPUID_ADDRESS (0xE000ED00) /* cpuid register address */
+#if 0
+0xE000ED40 ID_PFR0 Processor Feature Register 0
+0xE000ED44 ID_PFR1 Processor Feature Register 1
+0xE000ED48 ID_DFR0 Debug Feature Register 0
+0xE000ED4C ID_AFR0 Auxiliary Feature Register 0
+0xE000ED50 ID_MMFR0 Memory Model Feature Register 0
+0xE000ED54 ID_MMFR1 Memory Model Feature Register 1
+0xE000ED58 ID_MMFR2 Memory Model Feature Register 2
+0xE000ED5C ID_MMFR3 Memory Model Feature Register 3
+0xE000ED60 ID_ISAR0 Instruction Set Attribute Register 0
+0xE000ED64 ID_ISAR1 Instruction Set Attribute Register 1
+#endif
+
+/* Floating point extension */
+#define FPCCR_ADDRESS (0xE000EF34) /* status and control */
+#define FPCAR_ADDRESS (0xE000EF38) /* address reg */
+#define FPCDSCR_ADDRESS (0xE000EF3C) /* default statuc control */
+
 /* ########################################################################## */
 /*                     Local functions declaration                            */
 /* ########################################################################## */
@@ -63,6 +83,8 @@ static void static_fundtion(void);
 /* ########################################################################## */
 int main(void)
 {
+  volatile uint32_t reg_value = 0x00000000;
+
   /* Initialize device */
   initMcu();
   /* Initialize board */
@@ -78,8 +100,18 @@ int main(void)
   RETARGET_SerialFlush();
 
   printf("CPUID Application\n\r");
-  // Enter low energy state
+  reg_value = *((uint32_t*)CPUID_ADDRESS);
+  printf("CPUID -> 0x%.8x\n\r",reg_value);
 
+  printf("FPU Info\n\r");
+  reg_value = *((uint32_t*)FPCCR_ADDRESS);
+  printf("FPCCR -> 0x%.8x\n\r",reg_value);
+  reg_value = *((uint32_t*)FPCAR_ADDRESS);
+  printf("FPCAR -> 0x%.8x\n\r",reg_value);
+  reg_value = *((uint32_t*)FPCDSCR_ADDRESS);
+  printf("FPCDSCR -> 0x%.8x\n\r",reg_value);
+
+  // Enter low energy state
   for(;;)
   {
     EMU_EnterEM1();
