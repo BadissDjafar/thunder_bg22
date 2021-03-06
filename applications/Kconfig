@@ -11,5 +11,6 @@ source "applications/cpuid/Kconfig.app"
 source "applications/ble_adv/Kconfig.app"
 
 # Bluetooth Mesh Examples
+source "applications/mesh/Kconfig"
 
 endchoice

@@ -3,3 +3,18 @@
 config BOARD_EFR32BGM220_EXP_KIT
 	bool "SiLabs BGM220 Explorer kit"
 	select SOC_PART_NUMBER_BGM220PC22HNA
+
+if BOARD_EFR32BGM220_EXP_KIT
+choice
+  prompt "Choose the BMA400 acceleromer bus"
+
+  config APP_BMA400_I2C0
+    bool "BMA400 on I2C0 bus"
+  
+  config APP_BMA400_SPI0
+    bool "BMA400 on SPI0 bus"
+endchoice
+endif
+	
+	
+	

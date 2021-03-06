@@ -52,21 +52,29 @@ export LDFLAGS = -g -gdwarf-2 -mcpu=cortex-m33 -mthumb -T $(PRJROOT)/$(SOC)/$(LI
 
 ifeq ($(CONFIG_APP_LED),y)
 	TARGET = led
+	LINK_LIBS = bluetooth $(RADIO_LIB) mbedtls nvm3_CM33_gcc
 endif
 
 ifeq ($(CONFIG_APP_BLE_ADV),y)
 	TARGET = ble_adv
+	LINK_LIBS = bluetooth $(RADIO_LIB) mbedtls nvm3_CM33_gcc
 endif
 
 ifeq ($(CONFIG_APP_CPUID),y)
 	TARGET = cpuid
+	LINK_LIBS = bluetooth $(RADIO_LIB) mbedtls nvm3_CM33_gcc
 endif
 
 ifeq ($(CONFIG_APP_ACCELEROMETER_BMA440),y)
 	TARGET = accelerometer
-	IPATH += -I$(PRJROOT)/drivers/emdrv/ustimer 
+	IPATH += -I$(PRJROOT)/drivers/emdrv/ustimer
+	LINK_LIBS = bluetooth $(RADIO_LIB) mbedtls nvm3_CM33_gcc
 endif
 
+ifeq ($(CONFIG_APP_MESH_EMBEDDED_PROVISIONER),y)
+	TARGET = embedded_provisioner
+	LINK_LIBS = bluetoothmesh $(RADIO_LIB)
+endif
 
 ################################################################################
 #                               directories layout                             #
@@ -87,7 +95,7 @@ menuconfig :
 
 $(TARGET) : $(TARGET)_compile
 	@echo -e "\033[1;35m[Linking $@]\033[0m"
-	$(CC) $(LDFLAGS) $(LPATH) *.o -lbluetooth $(addprefix -l,$(RADIO_LIB)) -lmbedtls $(PRJROOT)/$(LIBS)/RF/bluetooth/binapploader.o -lnvm3_CM33_gcc -o $@.elf -lgcc -lc -lnosys
+	$(CC) $(LDFLAGS) $(LPATH) *.o $(addprefix -l,$(LINK_LIBS)) $(PRJROOT)/$(LIBS)/RF/bluetooth/binapploader.o -o $@.elf -lgcc -lc -lnosys
 
 	@echo -e "\033[1;35m[OBJCPY ->> HEX & SREC images $@]\033[0m"
 	$(OBJCPY) -O ihex $@.elf $@.hex
