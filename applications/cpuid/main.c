@@ -52,18 +52,16 @@
 
 /* System control block */
 #define CPUID_ADDRESS (0xE000ED00) /* cpuid register address */
-#if 0
-0xE000ED40 ID_PFR0 Processor Feature Register 0
-0xE000ED44 ID_PFR1 Processor Feature Register 1
-0xE000ED48 ID_DFR0 Debug Feature Register 0
-0xE000ED4C ID_AFR0 Auxiliary Feature Register 0
-0xE000ED50 ID_MMFR0 Memory Model Feature Register 0
-0xE000ED54 ID_MMFR1 Memory Model Feature Register 1
-0xE000ED58 ID_MMFR2 Memory Model Feature Register 2
-0xE000ED5C ID_MMFR3 Memory Model Feature Register 3
-0xE000ED60 ID_ISAR0 Instruction Set Attribute Register 0
-0xE000ED64 ID_ISAR1 Instruction Set Attribute Register 1
-#endif
+#define ID_PFR0 (0xE000ED40) /* Processor Feature Register 0 */
+#define ID_PFR1 (0xE000ED44) /* Processor Feature Register 1 */
+#define ID_DFR0 (0xE000ED48) /* Debug Feature Register 0 */
+#define ID_AFR0 0xE000ED4C  /* Auxiliary Feature Register 0 */
+#define ID_MMFR0 0xE000ED50 /* Memory Model Feature Register 0 */
+#define ID_MMFR1 0xE000ED54 /* Memory Model Feature Register 1 */
+#define ID_MMFR2 0xE000ED58 /* Memory Model Feature Register 2 */
+#define ID_MMFR3 0xE000ED5C /* Memory Model Feature Register 3 */
+#define ID_ISAR0 0xE000ED60 /* Instruction Set Attribute Register 0 */
+#define ID_ISAR1 0xE000ED64 /* Instruction Set Attribute Register 1s */
 
 /* Floating point extension */
 #define FPCCR_ADDRESS (0xE000EF34) /* status and control */
