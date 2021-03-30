@@ -16,10 +16,8 @@
  ******************************************************************************/
 
 #if defined(HAL_CONFIG)
-#include "bsphalconfig.h"
 #include "hal-config.h"
 #else
-#include "bspconfig.h"
 #endif
 
 #include "board_features.h"
@@ -28,8 +26,6 @@
 #include "em_cmu.h"
 #include "em_emu.h"
 #include "em_rtcc.h"
-
-#include "bsp.h"
 
 #include "init_mcu.h"
 

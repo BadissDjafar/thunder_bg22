@@ -16,11 +16,9 @@
  ******************************************************************************/
 
 #if defined(HAL_CONFIG)
-#include "bsphalconfig.h"
 #include "hal-config.h"
 #include "hal-config-board.h"
 #else
-#include "bspconfig.h"
 #endif
 
 void initApp(void)

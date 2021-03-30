@@ -17,11 +17,6 @@
 
 #include "pti.h"
 #include "rail.h"
-#if defined(HAL_CONFIG)
-#include "bsphalconfig.h"
-#else
-#include "bspconfig.h"
-#endif
 
 uint8_t configEnablePti(void)
 {

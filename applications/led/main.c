@@ -33,17 +33,14 @@
 /* Device initialization header */
 #include "hal-config.h"
 
-#if defined(HAL_CONFIG)
-#include "bsphalconfig.h"
-#else
-#include "bspconfig.h"
-#endif
-
 /**
  * @brief  Main function
  */
 int main(void)
 {
+  uint8_t idx;
+  uint8_t led_array[BSP_LED_COUNT][2]=BSP_LED_INIT;/* 2 is for both the port and the pin number */
+
   /* Initialize device */
   initMcu();
   /* Initialize board */
@@ -52,15 +49,17 @@ int main(void)
   initApp();
   initVcomEnable();
 
-  /* LED test */
+  /* Set up GPIO clock */
   CMU_ClockEnable(cmuClock_GPIO,true);
-  GPIO_PinModeSet(BSP_LED0_PORT,BSP_LED0_PIN,gpioModePushPull,0);
-  GPIO_PinOutSet(BSP_LED0_PORT,BSP_LED0_PIN);
 
-  if( BSP_LED_COUNT > 1 )
+  /* LED test */
+  if (1 == BSP_LED_PRESENT)
   {
-    GPIO_PinModeSet(BSP_LED1_PORT,BSP_LED1_PIN,gpioModePushPull,0);
-    GPIO_PinOutSet(BSP_LED1_PORT,BSP_LED1_PIN);
+    for( idx = 0 ; idx < BSP_LED_COUNT; idx++ )
+    {
+      GPIO_PinModeSet(led_array[idx][0],led_array[idx][1],gpioModePushPull,0);
+      GPIO_PinOutSet(led_array[idx][0],led_array[idx][1]);
+    }
   }
   for(;;){};
 }

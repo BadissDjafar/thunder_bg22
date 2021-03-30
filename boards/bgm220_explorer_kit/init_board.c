@@ -16,10 +16,8 @@
  ******************************************************************************/
 
 #if defined(HAL_CONFIG)
-#include "bsphalconfig.h"
 #include "hal-config.h"
 #else
-#include "bspconfig.h"
 #endif
 
 #include "board_features.h"
@@ -30,8 +28,6 @@
 
 #include "em_usart.h"
 #include "mx25flash_spi.h"
-
-#include "bsp.h"
 
 void initBoard(void)
 {
