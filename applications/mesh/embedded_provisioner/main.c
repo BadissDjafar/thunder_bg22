@@ -49,28 +49,19 @@
 #include "native_gecko.h"
 #include "gatt_db.h"
 #include <gecko_configuration.h>
-#include <mesh_sizes.h>
+#include "mesh_sizes.h"
 
-#include "stack.h"
+#include "config.h"
 #include "gpiointerrupt.h"
 
 /* Libraries containing default Gecko configuration values */
 #include <em_gpio.h>
 
-/* Coex header */
-#include "coexistence-ble.h"
-
 /* Device initialization header */
 #include "hal-config.h"
 
-/* Display Interface header */
-#include "display_interface.h"
-
-/* LED driver with support for PWM dimming */
-#include "led_driver.h"
-
 /* Application code */
-#include "src/app.h"
+#include "app.h"
 
 #if defined(HAL_CONFIG)
 #include "bsphalconfig.h"
@@ -198,19 +189,13 @@ int main(void)
   // Initialize the random number generator which is needed for proper radio work.
   gecko_cmd_system_get_random_data(16);
 
-  // Initialize coexistence interface. Parameters are taken from HAL config.
-  gecko_initCoexHAL();
-
   RETARGET_SerialInit();
 
   /* initialize LEDs and buttons. Note: some radio boards share the same GPIO for button & LED.
    * Initialization is done in this order so that default configuration will be "button" for those
    * radio boards with shared pins. LEDS_init() is called later as needed to (re)initialize the LEDs
    * */
-  LEDS_init();
   button_init();
-
-  GPIOINT_Init();
 
   /* enable interrupt for the button pins */
   GPIO_ExtIntConfig( BSP_BUTTON0_PORT,    /* button port */
@@ -237,10 +222,7 @@ int main(void)
                             Button_Event );  /* callback function */
 
   // Initialize BLE stack app data
-  initBLEMeshStack();
-
-  // Display Interface initialization
-  DI_Init();
+  initBLEMeshStack_app();
 
   printf("Running background\r\n");
 

@@ -1,7 +1,7 @@
 ################################################################################
 #                   recursive application build target def                     #
 ################################################################################
-DIRS = led ble_adv led_heartbeat timer accelerometer cpuid
+DIRS = led ble_adv led_heartbeat timer accelerometer cpuid mesh/embedded_provisioner
 
 ################################################################################
 #                             BUILD TARGETS                                    #
@@ -23,6 +23,9 @@ timer_app :
 
 cpuid_app :
 	$(MAKE) -C cpuid all
+
+embedded_provisioner_app :
+	$(MAKE) -C mesh/embedded_provisioner all
 
 ################################################################################
 #                             CLEAN TARGETS                                    #

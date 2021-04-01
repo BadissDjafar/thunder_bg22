@@ -42,10 +42,10 @@
 #include "native_gecko.h"
 #include "gatt_db.h"
 #include <gecko_configuration.h>
-#include <mesh_sizes.h>
+#include "mesh_sizes.h"
 
 #include "config.h"
-#include "stack.h"
+#include "app.h"
 
 /***************************************************************************//**
  * @addtogroup Application

@@ -1,6 +1,6 @@
 ################################################################################
 #                             basic build file                                 #
 ################################################################################
-OBJS = gpiointerrupt
+OBJS = main app config dcd mesh_pstore gatt_db mesh_lib
 
 include ../../../common.mk
