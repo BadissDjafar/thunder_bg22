@@ -52,10 +52,11 @@
 #include "mesh_sizes.h"
 
 #include "config.h"
-#include "gpiointerrupt.h"
 
+#include "gpiointerrupt.h"
 /* Libraries containing default Gecko configuration values */
-#include <em_gpio.h>
+#include "em_gpio.h"
+#include "em_cmu.h"
 
 /* Device initialization header */
 #include "hal-config.h"
@@ -195,6 +196,9 @@ int main(void)
    * Initialization is done in this order so that default configuration will be "button" for those
    * radio boards with shared pins. LEDS_init() is called later as needed to (re)initialize the LEDs
    * */
+  CMU_ClockEnable(cmuClock_GPIO, true);
+  GPIOINT_Init();
+
   button_init();
 
   /* enable interrupt for the button pins */
