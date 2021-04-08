@@ -42,6 +42,15 @@ ifeq ($(CONFIG_BOARD_EFR32MG21_BRD4181A01),y)
 	RADIO_LIB := rail_efr32xg21_gcc_release
 endif
 
+ifeq ($(CONFIG_BOARD_EFR32MG12P_BRD4181A01),y)
+	export LIBS = libs/efr32mg21
+	export BOARD = boards/brd4181a01
+	export SOC = soc/efr32bg21
+	CHIP := EFR32BG21A020F1024IM32
+	LINKER_SCRIPT := efr32mg21a010f1024im32
+	RADIO_LIB := rail_efr32xg21_gcc_release
+endif
+
 # include/lib path
 export IPATH = -I$(PRJROOT)/include -I$(PRJROOT)/include/CMSIS/include -I$(PRJROOT)/drivers/emlib -I$(PRJROOT)/drivers/emdrv/gpiointerrupt -I$(PRJROOT)/$(SOC) -I$(PRJROOT)/$(BOARD)  
 export LPATH = -L$(PRJROOT)/$(LIBS)/RF/bluetooth -L$(PRJROOT)/$(LIBS)/RF/radio -L$(PRJROOT)/drivers/emdrv/nvm3 -L$(PRJROOT)/$(LIBS)/RF/btmesh
