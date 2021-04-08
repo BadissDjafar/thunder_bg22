@@ -79,6 +79,13 @@ ifeq ($(CONFIG_APP_MESH_EMBEDDED_PROVISIONER),y)
 	LINK_LIBS = bluetooth_mesh $(RADIO_LIB) nvm3_CM33_gcc
 endif
 
+ifeq ($(CONFIG_APP_MESH_SUBNET_BRIDGE),y)
+	TARGET = subnet_bridge
+	IPATH += -I$(PRJROOT)/$(LIBS)/RF/btmesh -I$(PRJROOT)/$(LIBS)/RF/radio
+	CFLAGS += -DNVM3_DEFAULT_MAX_OBJECT_SIZE=512 -DENABLE_LOGGING=1 -DMESH_LIB_NATIVE=1
+	LINK_LIBS = bluetooth_mesh $(RADIO_LIB) nvm3_CM33_gcc
+endif
+
 ################################################################################
 #                               directories layout                             #
 ################################################################################

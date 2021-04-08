@@ -75,6 +75,11 @@ void appMain(gecko_configuration_t *pconfig)
          * The last two parameters are duration and maxevents left as default. */
         gecko_cmd_le_gap_set_advertise_timing(0, 160, 160, 0, 0);
 
+#if 0
+        /* Change adverdising PHY */
+        gecko_cmd_le_gap_set_advertise_phy(0,le_gap_phy_coded,le_gap_phy_coded);
+#endif
+
         /* Start general advertising and enable connections. */
         gecko_cmd_le_gap_start_advertising(0, le_gap_general_discoverable, le_gap_connectable_scannable);
         break;

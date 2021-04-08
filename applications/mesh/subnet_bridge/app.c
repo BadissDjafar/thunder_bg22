@@ -77,13 +77,19 @@ typedef struct{
 } device_table_entry_t;
 
 #define MAX_NUM_BTMESH_DEV (10)
+#define MAX_NUM_SUBNET (2)
 
 // bluetooth stack heap
 #define MAX_CONNECTIONS 2
 
 device_table_entry_t bluetooth_device_table[MAX_NUM_BTMESH_DEV];
 
-static const uint8 fixed_netkey[16] = {0x23, 0x98, 0xdf, 0xa5, 0x09, 0x3e, 0x74, 0xbb, 0xc2, 0x45, 0x1f, 0xae, 0xea, 0xd7, 0x67, 0xcd};
+static const uint8 fixed_netkey[MAX_NUM_SUBNET][16] =
+{
+    {0x23, 0x98, 0xdf, 0xa5, 0x09, 0x3e, 0x74, 0xbb, 0xc2, 0x45, 0x1f, 0xae, 0xea, 0xd7, 0x67, 0xcd},
+    {0x00, 0x22, 0xd1, 0x35, 0x09, 0x3e, 0x72, 0xab, 0xd2, 0x45, 0x10, 0x55, 0xea, 0xd7, 0x67, 0xcd}
+};
+
 static const uint8 fixed_appkey[16] = {0x16, 0x39, 0x38, 0x03, 0x9b, 0x8d, 0x8a, 0x20, 0x81, 0x60, 0xa7, 0x93, 0x33, 0x3d, 0x03, 0x61};
 
 /* DCD receive */
@@ -126,6 +132,7 @@ void mesh_native_bgapi_init(void);
 bool mesh_bgapi_listener(struct gecko_cmd_packet *evt);
 static int8_t IsDevPresent(const uint8_t * const addr);
 static void config_check(void);
+static void set_device_name(bd_addr *pAddr);
 
 /*
  * Add one publication setting to the list of configurations to be done
@@ -201,16 +208,70 @@ void bkgndBLEMeshStack_app(void)
   if (pass /*&& event_is_not_deprecated(evt)*/) {
     switch (BGLIB_MSG_ID(evt->header)) {
       case gecko_evt_system_boot_id:
-        /* Initialize Mesh stack in Node operation mode, wait for initialized event */
+        /* Initialize Mesh stack in Node operation mode, wait for initialized event.
+         * Once the node is provisioned to the primary network scan for unprovisioned beacons
+         * and start builbing subnet.
+         *  */
+#if 0
         if(0 != gecko_cmd_mesh_prov_init()->result)
         {
           /* Something went wrong */
           printf("gecko_cmd_mesh_prov_init failed\n\r");
         }
+#endif
+        if(0 != gecko_cmd_mesh_node_init()->result)
+        {
+          /* Something went wrong */
+          printf("gecko_cmd_mesh_node_init failed\n\r");
+        }
+        else
+        {
+          struct gecko_msg_system_get_bt_address_rsp_t *pAddr = gecko_cmd_system_get_bt_address();
+
+          set_device_name(&pAddr->address);
+          printf("Building primary network\n\r");
+        }
 
         break;
+
+      case gecko_evt_mesh_node_initialized_id:
+        printf("node initialized\r\n");
+
+        struct gecko_msg_mesh_node_initialized_evt_t *pData = (struct gecko_msg_mesh_node_initialized_evt_t *)&(evt->data);
+
+        if (pData->provisioned) {
+          printf("node provisioned in network : address:%x, ivi:%ld\r\r\n",pData->address, pData->ivi);
+        } else {
+          printf("node is unprovisioned\r\nstarting unprovisioned beaconing...\r\n");
+          /* On only use the ATT Bearer as this is meant to work with the phone app */
+          gecko_cmd_mesh_node_start_unprov_beaconing(0x3);
+        }
+
+        break;
+
+      case gecko_evt_mesh_node_provisioning_started_id:
+        printf("Started provisioning\r\n");
+        break;
+
+      case gecko_evt_mesh_node_provisioned_id:
+        printf("node provisioned, got address=%x\r\n", evt->data.evt_mesh_node_provisioned.address);
+        break;
+
+      case gecko_evt_mesh_node_provisioning_failed_id:
+        printf("provisioning failed, code %x\r\n", evt->data.evt_mesh_node_provisioning_failed.result);
+        break;
+
+      case gecko_evt_mesh_node_key_added_id:
+        printf("got new %s key with index %x\r\n", evt->data.evt_mesh_node_key_added.type == 0 ? "network" : "application",
+            evt->data.evt_mesh_node_key_added.index);
+        break;
+
+      case gecko_evt_mesh_node_model_config_changed_id:
+        printf("model config changed\r\n");
+        break;
+
       case gecko_evt_mesh_prov_initialized_id:
-        new_netkey_rsp = gecko_cmd_mesh_prov_create_network(16, fixed_netkey);
+        new_netkey_rsp = gecko_cmd_mesh_prov_create_network(16, fixed_netkey[0]);
         if(0 != new_netkey_rsp->result)
         {
           /* Something went wrong */
@@ -345,6 +406,37 @@ void bkgndBLEMeshStack_app(void)
         break;
       case gecko_evt_le_connection_opened_id:
         printf("LE connection opened\r\n");
+        break;
+
+      case gecko_evt_le_connection_closed_id:
+        printf("LE connection closed\r\n");
+        break;
+
+      case gecko_evt_le_connection_parameters_id:
+        printf("LE connection parameters\r\n");
+        break;
+      case gecko_evt_le_connection_phy_status_id:
+        printf("LE connection phy_status\r\n");
+        break;
+
+      case gecko_evt_gatt_mtu_exchanged_id:
+        printf("LE connection MTU exchange\r\n");
+        break;
+
+      case gecko_evt_mesh_health_server_attention_id:
+        printf("Mesh health server attention\r\n");
+        break;
+
+      case gecko_evt_gatt_server_user_write_request_id:
+        printf("GATT server User write\r\n");
+        break;
+
+      case gecko_evt_gatt_server_characteristic_status_id:
+        printf("GATT server characteristic status\r\n");
+        break;
+
+      case gecko_evt_mesh_proxy_connected_id:
+        printf("Mesh Proxy event\r\n");
         break;
 
       case gecko_evt_mesh_config_client_dcd_data_end_id:
@@ -643,4 +735,30 @@ static void config_check()
       config_bind_add(DIM_LIGHT_MODEL_ID, 0xFFFF, 0, 0);
     }
   }
+}
+
+/***************************************************************************//**
+ * Set device name in the GATT database. A unique name is generated using
+ * the two last bytes from the Bluetooth address of this device. Name is also
+ * displayed on the LCD.
+ *
+ * @param[in] pAddr  Pointer to Bluetooth address.
+ ******************************************************************************/
+static void set_device_name(bd_addr *pAddr)
+{
+  char name[20];
+  uint16_t res;
+
+  // create unique device name using the last two bytes of the Bluetooth address
+  sprintf(name, "subnet bridge %02x:%02x", pAddr->addr[1], pAddr->addr[0]);
+
+  printf("Device name: '%s'\r\n", name);
+
+  // write device name to the GATT database
+  res = gecko_cmd_gatt_server_write_attribute_value(gattdb_device_name, 0, strlen(name), (uint8_t *)name)->result;
+  if (res) {
+    printf("gecko_cmd_gatt_server_write_attribute_value() failed, code %x\r\n", res);
+  }
+
+  return;
 }
