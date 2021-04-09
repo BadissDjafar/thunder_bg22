@@ -30,6 +30,9 @@ embedded_provisioner_app :
 subnet_bridge_app :
 	$(MAKE) -C mesh/subnet_bridge all
 
+edge_node_app :
+	$(MAKE) -C mesh/edge_node all
+
 ################################################################################
 #                             CLEAN TARGETS                                    #
 ################################################################################

@@ -8,6 +8,7 @@ if APP_MESH
   
     source "applications/mesh/embedded_provisioner/Kconfig.app"
     source "applications/mesh/subnet_bridge/Kconfig.app"
+    source "applications/mesh/edge_node/Kconfig.app"
   
   endchoice
 endif

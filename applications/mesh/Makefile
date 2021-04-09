@@ -1,7 +1,7 @@
 ################################################################################
 #                   recursive application build target def                     #
 ################################################################################
-DIRS = subnet_bridge embedded_provisioner
+DIRS = subnet_bridge embedded_provisioner edge_node
 
 ################################################################################
 #                             CLEAN TARGETS                                    #

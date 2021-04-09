@@ -52,7 +52,7 @@ ifeq ($(CONFIG_BOARD_EFR32MG12P_BRD4181A01),y)
 endif
 
 # include/lib path
-export IPATH = -I$(PRJROOT)/include -I$(PRJROOT)/include/CMSIS/include -I$(PRJROOT)/drivers/emlib -I$(PRJROOT)/drivers/emdrv/gpiointerrupt -I$(PRJROOT)/$(SOC) -I$(PRJROOT)/$(BOARD)  
+export IPATH = -I$(PRJROOT)/include -I$(PRJROOT)/include/CMSIS/include -I$(PRJROOT)/drivers/emlib -I$(PRJROOT)/drivers/emdrv/gpiointerrupt -I$(PRJROOT)/$(SOC) -I$(PRJROOT)/$(BOARD) -I$(PRJROOT)/drivers/middleware  
 export LPATH = -L$(PRJROOT)/$(LIBS)/RF/bluetooth -L$(PRJROOT)/$(LIBS)/RF/radio -L$(PRJROOT)/drivers/emdrv/nvm3 -L$(PRJROOT)/$(LIBS)/RF/btmesh
 
 # compilation/linking flag
@@ -94,6 +94,13 @@ ifeq ($(CONFIG_APP_MESH_SUBNET_BRIDGE),y)
 	IPATH += -I$(PRJROOT)/$(LIBS)/RF/btmesh -I$(PRJROOT)/$(LIBS)/RF/radio
 	CFLAGS += -DNVM3_DEFAULT_MAX_OBJECT_SIZE=512 -DENABLE_LOGGING=1 -DMESH_LIB_NATIVE=1
 	LINK_LIBS = bluetooth_mesh $(RADIO_LIB) nvm3_CM33_gcc
+endif
+
+ifeq ($(CONFIG_APP_MESH_EDGE_NODE),y)
+	TARGET = edge_node
+	IPATH += -I$(PRJROOT)/$(LIBS)/RF/btmesh -I$(PRJROOT)/$(LIBS)/RF/radio -I$(PRJROOT)/drivers/emdrv/ustimer
+	CFLAGS += -DNVM3_DEFAULT_MAX_OBJECT_SIZE=512 -DENABLE_LOGGING=1 -DMESH_LIB_NATIVE=1
+	LINK_LIBS = bluetooth_mesh $(RADIO_LIB) nvm3_CM33_gcc m
 endif
 
 ################################################################################
