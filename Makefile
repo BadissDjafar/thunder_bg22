@@ -72,6 +72,7 @@ endif
 
 ifeq ($(CONFIG_APP_CPUID),y)
 	TARGET = cpuid
+	IPATH += -I$(PRJROOT)/$(LIBS)/RF/radio
 	LINK_LIBS = bluetooth $(RADIO_LIB) mbedtls nvm3_CM33_gcc
 endif
 
