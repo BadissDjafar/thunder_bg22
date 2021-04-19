@@ -6,6 +6,7 @@ choice
 source "applications/led/Kconfig.app"
 source "applications/accelerometer/Kconfig.app"
 source "applications/cpuid/Kconfig.app"
+source "applications/sin_cos_dsp/Kconfig.app"
 
 # BLE Examples
 source "applications/ble_adv/Kconfig.app"

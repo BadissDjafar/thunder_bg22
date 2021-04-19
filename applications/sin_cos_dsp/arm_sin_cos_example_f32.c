@@ -80,13 +80,35 @@
 
 /** \example arm_sin_cos_example_f32.c
   */
-
-#include <math.h>
-#include "arm_math.h"
-
-#if defined(SEMIHOSTING)
 #include <stdio.h>
+#include <math.h>
+
+/* Board headers */
+#include "init_mcu.h"
+#include "init_board.h"
+#include "init_app.h"
+#include "ble-configuration.h"
+#include "board_features.h"
+
+/* Libraries containing default Gecko configuration values */
+#include "em_cmu.h"
+#include "em_emu.h"
+#include "em_gpio.h"
+
+/* Device initialization header */
+#include "hal-config.h"
+
+#if defined(HAL_CONFIG)
+#include "bsphalconfig.h"
+#else
+#include "bspconfig.h"
 #endif
+
+/* retarget serial */
+#include "retargetserial.h"
+
+/* ARM Math */
+#include "arm_math.h"
 
 /* ----------------------------------------------------------------------
 * Defines each of the tests performed
@@ -133,6 +155,18 @@ int32_t main(void)
   float32_t diff;
   uint32_t i;
 
+  /* Initialize device */
+  initMcu();
+  /* Initialize board */
+  initBoard();
+  /* Initialize application */
+  initApp();
+  initVcomEnable();
+
+  /* Initialize debug prints. Note: debug prints are off by default. See DEBUG_LEVEL in app.h */
+  RETARGET_SerialInit();
+  RETARGET_SerialFlush();
+
   for(i=0; i< blockSize; i++)
   {
     cosOutput = arm_cos_f32(testInput_f32[i]);
@@ -157,21 +191,12 @@ int32_t main(void)
 
   if (status != ARM_MATH_SUCCESS)
   {
-#if defined (SEMIHOSTING)
     printf("FAILURE\n");
-#else
     while (1);                             /* main function does not return */
-#endif
   }
   else
   {
-#if defined (SEMIHOSTING)
     printf("SUCCESS\n");
-#else
     while (1);                             /* main function does not return */
-#endif
   }
-
 }
-
- /** \endlink */

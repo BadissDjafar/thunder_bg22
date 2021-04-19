@@ -103,6 +103,12 @@ ifeq ($(CONFIG_APP_MESH_EDGE_NODE),y)
 	LINK_LIBS = bluetooth_mesh $(RADIO_LIB) nvm3_CM33_gcc m
 endif
 
+ifeq ($(CONFIG_APP_SIN_COS_DSP),y)
+	TARGET = sin_cos_dsp
+	IPATH += -I$(PRJROOT)/include/CMSIS/DSP/include -I$(PRJROOT)/$(LIBS)/RF/radio
+	LINK_LIBS = m $(RADIO_LIB)
+endif
+
 ################################################################################
 #                               directories layout                             #
 ################################################################################
