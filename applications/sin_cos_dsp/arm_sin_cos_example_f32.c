@@ -191,12 +191,12 @@ int32_t main(void)
 
   if (status != ARM_MATH_SUCCESS)
   {
-    printf("FAILURE\n");
+    printf("FAILURE\n\r");
     while (1);                             /* main function does not return */
   }
   else
   {
-    printf("SUCCESS\n");
+    printf("SUCCESS\n\r");
     while (1);                             /* main function does not return */
   }
 }
