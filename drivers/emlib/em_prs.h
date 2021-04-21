@@ -44,12 +44,7 @@ extern "C" {
 #endif
 
 /***************************************************************************//**
- * @addtogroup emlib
- * @{
- ******************************************************************************/
-
-/***************************************************************************//**
- * @addtogroup PRS
+ * @addtogroup prs
  * @{
  ******************************************************************************/
 
@@ -58,20 +53,28 @@ extern "C" {
  ******************************************************************************/
 
 #if defined(_SILICON_LABS_32B_SERIES_2)
+/** PRS Synchronous channel count. */
   #define PRS_SYNC_CHAN_COUNT    PRS_SYNC_CH_NUM
+/** PRS Asynchronous channel count. */
   #define PRS_ASYNC_CHAN_COUNT   PRS_ASYNC_CH_NUM
 #elif defined(_EFM32_GECKO_FAMILY)
+/** PRS Synchronous channel count. */
   #define PRS_SYNC_CHAN_COUNT    PRS_CHAN_COUNT
+/** PRS Asynchronous channel count. */
   #define PRS_ASYNC_CHAN_COUNT   0
 #else
+/** PRS Synchronous channel count. */
   #define PRS_SYNC_CHAN_COUNT    PRS_CHAN_COUNT
+/** PRS Asynchronous channel count. */
   #define PRS_ASYNC_CHAN_COUNT   PRS_CHAN_COUNT
 #endif
 
 #if !defined(_EFM32_GECKO_FAMILY)
+/** PRS asynchronous support */
 #define PRS_ASYNC_SUPPORTED      1
 #endif
 
+/** @cond DO_NOT_INCLUDE_WITH_DOXYGEN */
 /* Some devices have renamed signals so we map some of these signals to
    common names. */
 #if defined(PRS_USART0_RXDATAV)
@@ -89,6 +92,7 @@ extern "C" {
 #if defined(PRS_BURTC_COMP0)
 #define PRS_BURTC_COMP           PRS_BURTC_COMP0
 #endif
+/** @endcond */
 
 /*******************************************************************************
  ********************************   ENUMS   ************************************
@@ -132,7 +136,13 @@ typedef enum {
 
 /** PRS Signal. */
 typedef enum {
-  prsSignalNone       = 0x0,
+#if defined(_PRS_SYNC_CH_CTRL_SOURCESEL_MASK)
+  prsSignalNone       = PRS_SYNC_CH_CTRL_SOURCESEL_DEFAULT | (0x0 << _PRS_SYNC_CH_CTRL_SIGSEL_SHIFT), /**< No Signal. */
+  prsSignalSW         = PRS_SYNC_CH_CTRL_SOURCESEL_DEFAULT | (0x1 << _PRS_SYNC_CH_CTRL_SIGSEL_SHIFT), /**< Software-reserved Signal. */
+#else
+  prsSignalNone       = PRS_CH_CTRL_SOURCESEL_NONE | (0x0 << _PRS_CH_CTRL_SIGSEL_SHIFT),  /**< No Signal. */
+  prsSignalSW         = PRS_CH_CTRL_SOURCESEL_NONE | (0x1 << _PRS_CH_CTRL_SIGSEL_SHIFT),  /**< Software-reserved Signal. */
+#endif
   /* Timer Signals */
 #if defined(TIMER0)
   prsSignalTIMER0_UF  = PRS_TIMER0_UF,  /**< TIMER0 underflow Signal. */
@@ -473,8 +483,7 @@ void PRS_PinOutput(unsigned int ch, PRS_ChType_t type, GPIO_Port_TypeDef port, u
 void PRS_Combine(unsigned int chA, unsigned int chB, PRS_Logic_t logic);
 #endif
 
-/** @} (end addtogroup PRS) */
-/** @} (end addtogroup emlib) */
+/** @} (end addtogroup prs) */
 
 #ifdef __cplusplus
 }

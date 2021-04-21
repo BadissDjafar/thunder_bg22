@@ -109,6 +109,12 @@ ifeq ($(CONFIG_APP_SIN_COS_DSP),y)
 	LINK_LIBS = m $(RADIO_LIB)
 endif
 
+ifeq ($(CONFIG_APP_PRS_RADIO),y)
+	TARGET = prs_radio
+	IPATH += -I$(PRJROOT)/$(LIBS)/RF/radio -I$(PRJROOT)/$(LIBS)/RF/bluetooth
+	LINK_LIBS = bluetooth $(RADIO_LIB) mbedtls nvm3_CM33_gcc
+endif
+
 ################################################################################
 #                               directories layout                             #
 ################################################################################
