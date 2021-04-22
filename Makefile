@@ -53,7 +53,7 @@ endif
 
 # include/lib path
 export IPATH = -I$(PRJROOT)/include -I$(PRJROOT)/include/CMSIS/include -I$(PRJROOT)/drivers/emlib -I$(PRJROOT)/drivers/emdrv/gpiointerrupt -I$(PRJROOT)/$(SOC) -I$(PRJROOT)/$(BOARD) -I$(PRJROOT)/drivers/middleware  
-export LPATH = -L$(PRJROOT)/$(LIBS)/RF/bluetooth -L$(PRJROOT)/$(LIBS)/RF/radio -L$(PRJROOT)/drivers/emdrv/nvm3 -L$(PRJROOT)/$(LIBS)/RF/btmesh
+export LPATH = -L$(PRJROOT)/$(LIBS)/RF/bluetooth -L$(PRJROOT)/$(LIBS)/RF/radio -L$(PRJROOT)/$(LIBS)/nvm3 -L$(PRJROOT)/$(LIBS)/RF/btmesh
 
 # compilation/linking flag
 export CFLAGS = -g -gdwarf-2 -mcpu=cortex-m33 -mthumb -std=c99 -DNVM3_DEFAULT_NVM_SIZE=24576 -DHAL_CONFIG=1 -D__StackLimit=0x20000000 -D__HEAP_SIZE=0xD00 -D__STACK_SIZE=0x800 -D$(CHIP)=1 -mfpu=fpv5-sp-d16 -mfloat-abi=hard

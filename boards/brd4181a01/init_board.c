@@ -89,7 +89,9 @@ void initVcomEnable(void)
 #define ENABLE_PORT BSP_VCOM_ENABLE_PORT
 #define ENABLE_PIN BSP_VCOM_ENABLE_PIN
 #endif
+
   //Enable if requested
   GPIO_PinModeSet(ENABLE_PORT, ENABLE_PIN, gpioModePushPull, COMMON_ENABLE);
+
 #endif
 }

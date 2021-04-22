@@ -62,8 +62,6 @@
 static uint8_t boot_to_dfu = 0;
 /// Address of the Primary Element of the Node
 static uint16_t _my_address = 0;
-/// Number of active Bluetooth connections
-static uint8_t num_connections = 0;
 /// Handle of the last opened LE connection
 static uint8_t conn_handle = 0xFF;
 /// Flag for indicating that initialization was performed
@@ -364,7 +362,6 @@ void handle_gecko_event(uint32_t evt_id, struct gecko_cmd_packet *evt)
 
     case gecko_evt_le_connection_opened_id:
       printf("evt:gecko_evt_le_connection_opened_id\r\n");
-      num_connections++;
       conn_handle = evt->data.evt_le_connection_opened.connection;
       break;
 
@@ -381,6 +378,7 @@ void handle_gecko_event(uint32_t evt_id, struct gecko_cmd_packet *evt)
 
       printf("evt:conn closed, reason 0x%x\r\n", evt->data.evt_le_connection_closed.reason);
       conn_handle = 0xFF;
+
       break;
     case gecko_evt_gatt_server_user_write_request_id:
       if (evt->data.evt_gatt_server_user_write_request.characteristic == gattdb_ota_control) {
