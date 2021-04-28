@@ -5,6 +5,7 @@ choice
 source "soc/bgm220/Kconfig.series"
 source "soc/efr32bg22/Kconfig.series"
 source "soc/efr32bg21/Kconfig.series"
+source "soc/efr32mg12p/Kconfig.series"
 
 endchoice
 

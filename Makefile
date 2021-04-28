@@ -22,6 +22,9 @@ ifeq ($(CONFIG_BOARD_EFR32BG22_SLTB010A),y)
 	CHIP := EFR32BG22C224F512IM40
 	LINKER_SCRIPT := efr32bg22c224f512im40
 	RADIO_LIB := rail_efr32xg22_gcc_release
+	ARCH := cortex-m33
+	FPU := fpv5-sp-d16
+	FLOAT_ABI := hard
 endif
 
 ifeq ($(CONFIG_BOARD_EFR32BGM220_EXP_KIT),y)
@@ -31,6 +34,9 @@ ifeq ($(CONFIG_BOARD_EFR32BGM220_EXP_KIT),y)
 	CHIP := BGM220PC22HNA
 	LINKER_SCRIPT := bgm220pc22hna
 	RADIO_LIB := rail_module_efr32xg22_gcc_release rail_config_bgm220pc22hna_gcc
+	ARCH := cortex-m33
+	FPU := fpv5-sp-d16
+	FLOAT_ABI := hard
 endif
 
 ifeq ($(CONFIG_BOARD_EFR32MG21_BRD4181A01),y)
@@ -40,24 +46,30 @@ ifeq ($(CONFIG_BOARD_EFR32MG21_BRD4181A01),y)
 	CHIP := EFR32BG21A020F1024IM32
 	LINKER_SCRIPT := efr32mg21a010f1024im32
 	RADIO_LIB := rail_efr32xg21_gcc_release
+	ARCH := cortex-m33
+	FPU := fpv5-sp-d16
+	FLOAT_ABI := hard
 endif
 
-ifeq ($(CONFIG_BOARD_EFR32MG12P_BRD4181A01),y)
-	export LIBS = libs/efr32mg21
-	export BOARD = boards/brd4181a01
-	export SOC = soc/efr32bg21
-	CHIP := EFR32BG21A020F1024IM32
-	LINKER_SCRIPT := efr32mg21a010f1024im32
-	RADIO_LIB := rail_efr32xg21_gcc_release
+ifeq ($(CONFIG_BOARD_EFR32MG12P_SLTB004A),y)
+	export LIBS = libs/efr32mg12p
+	export BOARD = boards/thunderboard_s2
+	export SOC = soc/efr32mg12p
+	CHIP := EFR32MG12P332F1024GL125
+	LINKER_SCRIPT := efr32mg12p332f1024gl125
+	RADIO_LIB := rail_efr32xg12_gcc_release
+	ARCH := cortex-m4
+	FPU := fpv4-sp-d16
+	FLOAT_ABI := softfp
 endif
 
 # include/lib path
-export IPATH = -I$(PRJROOT)/include -I$(PRJROOT)/include/CMSIS/include -I$(PRJROOT)/drivers/emlib -I$(PRJROOT)/drivers/emdrv/gpiointerrupt -I$(PRJROOT)/$(SOC) -I$(PRJROOT)/$(BOARD) -I$(PRJROOT)/drivers/middleware  
-export LPATH = -L$(PRJROOT)/$(LIBS)/RF/bluetooth -L$(PRJROOT)/$(LIBS)/RF/radio -L$(PRJROOT)/$(LIBS)/nvm3 -L$(PRJROOT)/$(LIBS)/RF/btmesh
+export IPATH = -I$(PRJROOT)/include -I$(PRJROOT)/$(LIBS)/RF/radio -I$(PRJROOT)/include/CMSIS/include -I$(PRJROOT)/drivers/emlib -I$(PRJROOT)/drivers/emdrv/gpiointerrupt -I$(PRJROOT)/$(SOC) -I$(PRJROOT)/$(BOARD) -I$(PRJROOT)/drivers/middleware  
+export LPATH = -L$(PRJROOT)/$(LIBS)/RF/bluetooth -L$(PRJROOT)/$(LIBS)/RF/radio -L$(PRJROOT)/$(LIBS) -L$(PRJROOT)/drivers/emdrv/nvm3 -L$(PRJROOT)/$(LIBS)/RF/btmesh
 
 # compilation/linking flag
-export CFLAGS = -g -gdwarf-2 -mcpu=cortex-m33 -mthumb -std=c99 -DNVM3_DEFAULT_NVM_SIZE=24576 -DHAL_CONFIG=1 -D__StackLimit=0x20000000 -D__HEAP_SIZE=0xD00 -D__STACK_SIZE=0x800 -D$(CHIP)=1 -mfpu=fpv5-sp-d16 -mfloat-abi=hard
-export LDFLAGS = -g -gdwarf-2 -mcpu=cortex-m33 -mthumb -T $(PRJROOT)/$(SOC)/$(LINKER_SCRIPT).ld -Xlinker --gc-sections -Xlinker -Map="system.map" -mfpu=fpv5-sp-d16 -mfloat-abi=hard --specs=nano.specs -lm 
+export CFLAGS = -g -gdwarf-2 -mcpu=$(ARCH) -mthumb -std=c99 -DNVM3_DEFAULT_NVM_SIZE=24576 -DHAL_CONFIG=1 -D__StackLimit=0x20000000 -D__HEAP_SIZE=0xD00 -D__STACK_SIZE=0x800 -D$(CHIP)=1 -mfpu=$(FPU) -mfloat-abi=$(FLOAT_ABI)
+export LDFLAGS = -g -gdwarf-2 -mcpu=$(ARCH) -mthumb -T $(PRJROOT)/$(SOC)/$(LINKER_SCRIPT).ld -Xlinker --gc-sections -Xlinker -Map="system.map" -mfpu=$(FPU) -mfloat-abi=$(FLOAT_ABI) --specs=nano.specs 
 
 ifeq ($(CONFIG_APP_LED),y)
 	TARGET = led
@@ -66,13 +78,13 @@ endif
 
 ifeq ($(CONFIG_APP_BLE_ADV),y)
 	TARGET = ble_adv
-	IPATH += -I$(PRJROOT)/$(LIBS)/RF/radio -I$(PRJROOT)/$(LIBS)/RF/bluetooth
-	LINK_LIBS = bluetooth $(RADIO_LIB) mbedtls nvm3_CM33_gcc
+	IPATH += -I$(PRJROOT)/$(LIBS)/RF/bluetooth
+	LINK_LIBS = bluetooth $(RADIO_LIB) mbedtls nvm3
 endif
 
 ifeq ($(CONFIG_APP_CPUID),y)
 	TARGET = cpuid
-	IPATH += -I$(PRJROOT)/$(LIBS)/RF/radio
+	IPATH += 
 	LINK_LIBS = bluetooth $(RADIO_LIB) mbedtls nvm3_CM33_gcc
 endif
 
@@ -84,34 +96,34 @@ endif
 
 ifeq ($(CONFIG_APP_MESH_EMBEDDED_PROVISIONER),y)
 	TARGET = embedded_provisioner
-	IPATH += -I$(PRJROOT)/$(LIBS)/RF/btmesh -I$(PRJROOT)/$(LIBS)/RF/radio
+	IPATH += -I$(PRJROOT)/$(LIBS)/RF/btmesh
 	CFLAGS += -DNVM3_DEFAULT_MAX_OBJECT_SIZE=512 -DENABLE_LOGGING=1 -DMESH_LIB_NATIVE=1
 	LINK_LIBS = bluetooth_mesh $(RADIO_LIB) nvm3_CM33_gcc
 endif
 
 ifeq ($(CONFIG_APP_MESH_SUBNET_BRIDGE),y)
 	TARGET = subnet_bridge
-	IPATH += -I$(PRJROOT)/$(LIBS)/RF/btmesh -I$(PRJROOT)/$(LIBS)/RF/radio
+	IPATH += -I$(PRJROOT)/$(LIBS)/RF/btmesh
 	CFLAGS += -DNVM3_DEFAULT_MAX_OBJECT_SIZE=512 -DENABLE_LOGGING=1 -DMESH_LIB_NATIVE=1
 	LINK_LIBS = bluetooth_mesh $(RADIO_LIB) nvm3_CM33_gcc
 endif
 
 ifeq ($(CONFIG_APP_MESH_EDGE_NODE),y)
 	TARGET = edge_node
-	IPATH += -I$(PRJROOT)/$(LIBS)/RF/btmesh -I$(PRJROOT)/$(LIBS)/RF/radio -I$(PRJROOT)/drivers/emdrv/ustimer
+	IPATH += -I$(PRJROOT)/$(LIBS)/RF/btmesh -I$(PRJROOT)/drivers/emdrv/ustimer
 	CFLAGS += -DNVM3_DEFAULT_MAX_OBJECT_SIZE=512 -DENABLE_LOGGING=1 -DMESH_LIB_NATIVE=1
 	LINK_LIBS = bluetooth_mesh $(RADIO_LIB) nvm3_CM33_gcc m
 endif
 
 ifeq ($(CONFIG_APP_SIN_COS_DSP),y)
 	TARGET = sin_cos_dsp
-	IPATH += -I$(PRJROOT)/include/CMSIS/DSP/include -I$(PRJROOT)/$(LIBS)/RF/radio
+	IPATH += -I$(PRJROOT)/include/CMSIS/DSP/include
 	LINK_LIBS = m $(RADIO_LIB)
 endif
 
 ifeq ($(CONFIG_APP_PRS_RADIO),y)
 	TARGET = prs_radio
-	IPATH += -I$(PRJROOT)/$(LIBS)/RF/radio -I$(PRJROOT)/$(LIBS)/RF/bluetooth
+	IPATH += -I$(PRJROOT)/$(LIBS)/RF/bluetooth
 	LINK_LIBS = bluetooth $(RADIO_LIB) mbedtls nvm3_CM33_gcc
 endif
 
