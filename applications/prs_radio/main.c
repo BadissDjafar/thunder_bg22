@@ -42,16 +42,20 @@
 /* Enable TX_ACT signal through GPIO PD10 */
 #define _PRS_CH_CTRL_SOURCESEL_RAC2 0x00000031UL
 #define PRS_CH_CTRL_SOURCESEL_RAC2 (_PRS_CH_CTRL_SOURCESEL_RAC2 << 8)
+#define _PRS_CH_CTRL_SIGSEL_RACACTIVE 0x00000000UL
+#define PRS_CH_CTRL_SIGSEL_RACACTIVE (_PRS_CH_CTRL_SIGSEL_RACACTIVE << 0)
+#define _PRS_CH_CTRL_SIGSEL_RACLNAEN 0x00000001UL
+#define PRS_CH_CTRL_SIGSEL_RACLNAEN (_PRS_CH_CTRL_SIGSEL_RACLNAEN << 0)
 #define _PRS_CH_CTRL_SIGSEL_RACPAEN 0x00000002UL
 #define PRS_CH_CTRL_SIGSEL_RACPAEN (_PRS_CH_CTRL_SIGSEL_RACPAEN << 0)
-#define _PRS_CH_CTRL_SIGSEL_RACTX 0x00000004UL
-#define PRS_CH_CTRL_SIGSEL_RACTX (_PRS_CH_CTRL_SIGSEL_RACTX << 0)
 #define _PRS_CH_CTRL_SIGSEL_RACRX 0x00000003UL
 #define PRS_CH_CTRL_SIGSEL_RACRX (_PRS_CH_CTRL_SIGSEL_RACRX << 0)
+#define _PRS_CH_CTRL_SIGSEL_RACTX 0x00000004UL
+#define PRS_CH_CTRL_SIGSEL_RACTX (_PRS_CH_CTRL_SIGSEL_RACTX << 0)
 
 /* RACPAEN Enable (TX_ACT) signal through GPIO PD10 */
 #define TX_ACTIVE_PRS_SOURCE PRS_CH_CTRL_SOURCESEL_RAC2
-#define TX_ACTIVE_PRS_SIGNAL PRS_CH_CTRL_SIGSEL_RACPAEN
+#define TX_ACTIVE_PRS_SIGNAL PRS_CH_CTRL_SIGSEL_RACLNAEN
 #define TX_ACTIVE_PRS_CHANNEL 10
 #define TX_ACTIVE_PRS_PORT gpioPortD
 #define TX_ACTIVE_PRS_PIN 2
@@ -177,7 +181,7 @@ int main(void)
          * The next two parameters are minimum and maximum advertising interval, both in
          * units of (milliseconds * 1.6).
          * The last two parameters are duration and maxevents left as default. */
-        gecko_cmd_le_gap_set_advertise_timing(0, 160, 160, 0, 0);
+        gecko_cmd_le_gap_set_advertise_timing(0, 32, 32, 0, 0);
 
 #if 0
         /* Change adverdising PHY */
