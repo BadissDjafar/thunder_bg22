@@ -55,17 +55,17 @@
 
 /* RACPAEN Enable (TX_ACT) signal through GPIO PD10 */
 #define TX_ACTIVE_PRS_SOURCE PRS_CH_CTRL_SOURCESEL_RAC2
-#define TX_ACTIVE_PRS_SIGNAL PRS_CH_CTRL_SIGSEL_RACLNAEN
+#define TX_ACTIVE_PRS_SIGNAL PRS_CH_CTRL_SIGSEL_RACTX
 #define TX_ACTIVE_PRS_CHANNEL 10
 #define TX_ACTIVE_PRS_PORT gpioPortD
-#define TX_ACTIVE_PRS_PIN 2
+#define TX_ACTIVE_PRS_PIN 3
 
 /* Enable RX_ACT signal through GPIO PD11 */
 #define RX_ACTIVE_PRS_SOURCE PRS_CH_CTRL_SOURCESEL_RAC2
 #define RX_ACTIVE_PRS_SIGNAL PRS_CH_CTRL_SIGSEL_RACRX
 #define RX_ACTIVE_PRS_CHANNEL 11
 #define RX_ACTIVE_PRS_PORT gpioPortD
-#define RX_ACTIVE_PRS_PIN 3
+#define RX_ACTIVE_PRS_PIN 2
 
 /* BLE definitions */
 #define MAX_ADVERTISERS 1
@@ -130,10 +130,11 @@ static void initPrs(void)
   CMU_ClockEnable(cmuClock_PRS, true);
 
   /* Use RAC, PAEN as PRS source */
-  PRS_SourceAsyncSignalSet( TX_ACTIVE_PRS_CHANNEL, PRS_CH_CTRL_SIGSEL_RACPAEN, TX_ACTIVE_PRS_SIGNAL);
+  PRS_SourceAsyncSignalSet( TX_ACTIVE_PRS_CHANNEL, PRS_RAC_PAEN, PRS_RAC_PAEN);
+
 
   /* Use RAC, RX_ACT as PRS source */
-  PRS_SourceAsyncSignalSet( RX_ACTIVE_PRS_CHANNEL, RX_ACTIVE_PRS_SOURCE, RX_ACTIVE_PRS_SIGNAL);
+  PRS_SourceAsyncSignalSet( RX_ACTIVE_PRS_CHANNEL, PRS_RAC_RX, PRS_RAC_RX);
 
   /* Route output to PC01. No extra PRS logic needed here. */
   PRS_PinOutput(TX_ACTIVE_PRS_CHANNEL,prsTypeAsync, TX_ACTIVE_PRS_PORT , TX_ACTIVE_PRS_PIN);
