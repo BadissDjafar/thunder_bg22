@@ -21,6 +21,10 @@
 <img src="https://img.shields.io/badge/Silabs%20Bluetooth%20Mesh-documentation-blue.svg?longCache=true">
 </a>
 
+<a href="https://docs.silabs.com/bluetooth/latest/">
+<img src="https://img.shields.io/badge/Silabs%20Bluetooth%20Low%20Energy-documentation-blue.svg?longCache=true">
+</a>
+
 <a href="https://www.zlib.net/zlib_license.html">
 <img src="https://img.shields.io/badge/Zlib-license-lightgrey.svg?longCache=true">
 </a>
