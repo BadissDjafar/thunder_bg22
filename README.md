@@ -18,6 +18,10 @@
 </table>
 
 <a href="https://docs.silabs.com/bluetooth/latest/">
+<img src="https://img.shields.io/badge/Silabs%20Bluetooth%20documentation-blue.svg?longCache=true">
+</a>
+
+<a href="https://docs.silabs.com/bluetooth/latest/">
 <img src="https://img.shields.io/badge/Silabs%20Bluetooth%20Mesh-documentation-blue.svg?longCache=true">
 </a>
 

@@ -1,7 +1,7 @@
 ################################################################################
 #                   recursive application build target def                     #
 ################################################################################
-DIRS = led ble_adv led_heartbeat timer accelerometer cpuid mesh sin_cos_dsp prs_radio
+DIRS = led ble_adv led_heartbeat timer accelerometer cpuid mesh sin_cos_dsp prs_radio dsp_iadc
 
 ################################################################################
 #                             BUILD TARGETS                                    #
@@ -34,6 +34,9 @@ cpuid_app :
 
 sin_cos_dsp_app :
 	$(MAKE) -C sin_cos_dsp all
+
+dsp_iadc_app :
+	$(MAKE) -C dsp_iadc all
 
 # Bluetooth Mesh examples
 embedded_provisioner_app :

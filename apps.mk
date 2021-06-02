@@ -52,6 +52,12 @@ ifeq ($(CONFIG_APP_SIN_COS_DSP),y)
 	LINK_LIBS = m $(RADIO_LIB)
 endif
 
+ifeq ($(CONFIG_APP_DSP_IADC),y)
+	TARGET = dsp_iadc
+	IPATH += -I$(PRJROOT)/include/CMSIS/DSP/include
+	LINK_LIBS = m $(RADIO_LIB)
+endif
+
 ifeq ($(CONFIG_APP_PRS_RADIO),y)
 	TARGET = prs_radio
 	IPATH += -I$(PRJROOT)/$(LIBS)/RF/bluetooth
