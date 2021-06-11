@@ -13,6 +13,12 @@ ifeq ($(CONFIG_APP_BLE_ADV),y)
 	LINK_LIBS = bluetooth $(RADIO_LIB) mbedtls
 endif
 
+ifeq ($(CONFIG_APP_BLE_HCI),y)
+	TARGET = ble_hci
+	IPATH += -I$(PRJROOT)/$(LIBS)/RF/bluetooth
+	LINK_LIBS = $(LL_HCI_LIB) bgcommon_efr32xg22_gcc_release rail_efr32xg22_gcc_release_1m_coded mbedcrypto
+endif
+
 ifeq ($(CONFIG_APP_CPUID),y)
 	TARGET = cpuid
 	IPATH += 

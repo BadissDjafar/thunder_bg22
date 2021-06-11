@@ -1,7 +1,7 @@
 ################################################################################
 #                   recursive application build target def                     #
 ################################################################################
-DIRS = led ble_adv led_heartbeat timer accelerometer cpuid mesh sin_cos_dsp prs_radio dsp_iadc
+DIRS = led ble_adv led_heartbeat timer accelerometer cpuid mesh sin_cos_dsp prs_radio dsp_iadc ble_hci
 
 ################################################################################
 #                             BUILD TARGETS                                    #
@@ -10,6 +10,9 @@ DIRS = led ble_adv led_heartbeat timer accelerometer cpuid mesh sin_cos_dsp prs_
 # BLE Rail and Radio example
 ble_adv_app :
 	$(MAKE) -C ble_adv all
+
+ble_hci_app :
+	$(MAKE) -C ble_hci all
 
 prs_radio_app :
 	$(MAKE) -C prs_radio all
