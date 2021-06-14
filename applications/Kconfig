@@ -4,15 +4,13 @@ choice
 
 # Non BLE Examples
 source "applications/led/Kconfig.app"
-source "applications/accelerometer/Kconfig.app"
 source "applications/cpuid/Kconfig.app"
 source "applications/sin_cos_dsp/Kconfig.app"
 
 # BLE Examples
 source "applications/ble_adv/Kconfig.app"
+source "applications/ble_hci/Kconfig.app"
+source "applications/ble_throughput/Kconfig.app"
 source "applications/prs_radio/Kconfig.app"
-
-# Bluetooth Mesh Examples
-source "applications/mesh/Kconfig"
 
 endchoice

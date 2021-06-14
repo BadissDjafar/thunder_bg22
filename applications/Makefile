@@ -1,7 +1,7 @@
 ################################################################################
 #                   recursive application build target def                     #
 ################################################################################
-DIRS = led ble_adv led_heartbeat timer accelerometer cpuid mesh sin_cos_dsp prs_radio
+DIRS = led ble_adv ble_hci ble_throughput led_heartbeat cpuid sin_cos_dsp prs_radio
 
 ################################################################################
 #                             BUILD TARGETS                                    #
@@ -11,6 +11,12 @@ DIRS = led ble_adv led_heartbeat timer accelerometer cpuid mesh sin_cos_dsp prs_
 ble_adv_app :
 	$(MAKE) -C ble_adv all
 
+ble_hci_app :
+	$(MAKE) -C ble_hci all
+
+ble_throughput_app :
+	$(MAKE) -C ble_throughput all
+
 prs_radio_app :
 	$(MAKE) -C prs_radio all
 
@@ -18,15 +24,8 @@ prs_radio_app :
 led_app :
 	$(MAKE) -C led all
 
-accelerometer_app :
-	$(MAKE) -C accelerometer all
-
-
 led_heartbeat_app :
 	$(MAKE) -C led_heartbeat all
-
-timer_app :
-	$(MAKE) -C timer all
 
 # Core & DSP examples
 cpuid_app :
@@ -34,16 +33,6 @@ cpuid_app :
 
 sin_cos_dsp_app :
 	$(MAKE) -C sin_cos_dsp all
-
-# Bluetooth Mesh examples
-embedded_provisioner_app :
-	$(MAKE) -C mesh/embedded_provisioner all
-
-subnet_bridge_app :
-	$(MAKE) -C mesh/subnet_bridge all
-
-edge_node_app :
-	$(MAKE) -C mesh/edge_node all
 
 ################################################################################
 #                             CLEAN TARGETS                                    #
